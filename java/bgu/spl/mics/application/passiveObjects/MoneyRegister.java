@@ -1,6 +1,9 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Passive object representing the store finance management.
  * It should hold a list of receipts issued by the store.
@@ -12,6 +15,8 @@ package bgu.spl.mics.application.passiveObjects;
  */
 public class MoneyRegister
 {
+    private static List<OrderReceipt> orList;
+    private static MoneyRegister instance = null;
 
     /**
      * Retrieves the single instance of this class.
@@ -19,7 +24,9 @@ public class MoneyRegister
     public static MoneyRegister getInstance ()
     {
         //TODO: Implement this
-        return null;
+        if ( instance == null )
+            instance = new MoneyRegister();
+        return instance;
     }
 
     /**
@@ -31,6 +38,9 @@ public class MoneyRegister
     public void file ( OrderReceipt r )
     {
         //TODO: Implement this.
+        if ( orList == null )
+            orList = new ArrayList<OrderReceipt>();
+        orList.add( r );
     }
 
     /**
@@ -38,8 +48,13 @@ public class MoneyRegister
      */
     public int getTotalEarnings ()
     {
+        int sum = 0;
         //TODO: Implement this
-        return 0;
+        for ( int i = 0 ; i < orList.size() ; i++ )
+        {
+            sum += orList.get( i ).getPrice();
+        }
+        return sum;
     }
 
     /**
@@ -51,6 +66,7 @@ public class MoneyRegister
     public void chargeCreditCard ( Customer c, int amount )
     {
         // TODO Implement this
+        c.changeAmountOfCredit( amount );
     }
 
     /**

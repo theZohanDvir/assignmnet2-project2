@@ -18,6 +18,12 @@ public class Customer
     private int creditCard; // int – The number of the credit card of the customer.
     private int availableAmountInCreditCard; // The remaining available amount of money in the creditcardof the custome
 
+    public void changeAmountOfCredit( int amount )
+    {
+        //change the current amount of money to the given one.
+        availableAmountInCreditCard = amount;
+    }
+
     /**
      * Retrieves the name of the customer.
      */
