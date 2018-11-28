@@ -1,6 +1,9 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Passive data-object representing the store inventory.
  * It holds a collection of {@link BookInventoryInfo} for all the
@@ -13,6 +16,7 @@ package bgu.spl.mics.application.passiveObjects;
  */
 public class Inventory
 {
+    private BookInventoryInfo [] biiArr;
 
     /**
      * Retrieves the single instance of this class.
@@ -20,7 +24,7 @@ public class Inventory
     public static Inventory getInstance ()
     {
         //TODO: Implement this
-        return ;
+        return null;
     }
 
     /**
@@ -33,7 +37,11 @@ public class Inventory
      */
     public void load ( BookInventoryInfo[] inventory )
     {
-
+        biiArr = new BookInventoryInfo[inventory.length];
+        for ( int i = 0 ; i < inventory.length ; i++ )
+        {
+            biiArr[i] = inventory[i];
+        }
     }
 
     /**
@@ -60,6 +68,11 @@ public class Inventory
     public int checkAvailabiltyAndGetPrice ( String book )
     {
         //TODO: Implement this
+        for ( int i = 0 ; i < biiArr.length ; i++ )
+        {
+            if ( biiArr[i].getBookTitle() == book && biiArr[i].getAmountInInventory() > 0 )
+                return biiArr[i].getPrice();
+        }
         return -1;
     }
 
@@ -73,5 +86,9 @@ public class Inventory
     public void printInventoryToFile ( String filename )
     {
         //TODO: Implement this
+        for ( int i = 0 ; i < biiArr.length ; i++ )
+        {
+
+        }
     }
 }
