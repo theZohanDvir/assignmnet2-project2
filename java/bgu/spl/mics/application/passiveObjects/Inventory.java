@@ -16,7 +16,8 @@ import java.util.List;
  */
 public class Inventory
 {
-    private BookInventoryInfo [] biiArr;
+    private BookInventoryInfo[] biiArr;
+    private static Inventory inventory = null;
 
     /**
      * Retrieves the single instance of this class.
@@ -24,7 +25,9 @@ public class Inventory
     public static Inventory getInstance ()
     {
         //TODO: Implement this
-        return null;
+        if ( inventory == null )
+            inventory = new Inventory();
+        return inventory;
     }
 
     /**
@@ -55,7 +58,19 @@ public class Inventory
      */
     public OrderResult take ( String book )
     {
-        return null;
+        int numOfBook = -1;
+        for ( int i = 0 ; i < biiArr.length ; i++ )
+        {
+            if ( biiArr[i].getBookTitle() == book && biiArr[i].getAmountInInventory() > 0 )
+            {
+                numOfBook = i;
+                i = biiArr.length;
+            }
+        }
+        if ( numOfBook== -1)
+            return OrderResult.NOT_IN_STOCK;
+        else
+            return OrderResult.SUCCESSFULLY_TAKEN;
     }
 
     /**

@@ -6,4 +6,5 @@ package bgu.spl.mics.application.passiveObjects;
 public enum OrderResult
 {
 	//TODO: Implement this
+    NOT_IN_STOCK, SUCCESSFULLY_TAKEN
 }
