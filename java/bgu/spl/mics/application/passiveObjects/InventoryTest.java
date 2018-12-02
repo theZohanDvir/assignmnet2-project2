@@ -21,6 +21,7 @@ public class InventoryTest
     @org.junit.Test
     public void getInstance ()
     {
+        Assert
     }
 
     @org.junit.Test
