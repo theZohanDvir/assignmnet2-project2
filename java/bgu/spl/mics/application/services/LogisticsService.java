@@ -7,21 +7,24 @@ import bgu.spl.mics.MicroService;
  * Handles {@link DeliveryEvent}.
  * This class may not hold references for objects which it is not responsible for:
  * {@link ResourcesHolder}, {@link MoneyRegister}, {@link Inventory}.
- * 
+ * <p>
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
-public class LogisticsService extends MicroService {
+public class LogisticsService extends MicroService
+{
 
-	public LogisticsService() {
-		super("Change_This_Name");
-		// TODO Implement this
-	}
+    public LogisticsService ()
+    {
+        super( "Change_This_Name" );
+        // TODO Implement this
+    }
 
-	@Override
-	protected void initialize() {
-		// TODO Implement this
-		
-	}
+    @Override
+    protected void initialize ()
+    {
+        // TODO Implement this
+
+    }
 
 }
