@@ -67,7 +67,7 @@ public class Inventory
                 i = biiArr.length;
             }
         }
-        if ( numOfBook== -1)
+        if ( numOfBook == -1 )
             return OrderResult.NOT_IN_STOCK;
         else
             return OrderResult.SUCCESSFULLY_TAKEN;
@@ -101,9 +101,6 @@ public class Inventory
     public void printInventoryToFile ( String filename )
     {
         //TODO: Implement this
-        for ( int i = 0 ; i < biiArr.length ; i++ )
-        {
-
-        }
+        //dont need to implement
     }
 }

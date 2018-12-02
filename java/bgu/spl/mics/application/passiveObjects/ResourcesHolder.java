@@ -13,13 +13,17 @@ import bgu.spl.mics.Future;
  */
 public class ResourcesHolder
 {
+    private static ResourcesHolder resourcesHolder=null;
+
     /**
      * Retrieves the single instance of this class.
      */
     public static ResourcesHolder getInstance ()
     {
         //TODO: Implement this
-        return null;
+        if ( resourcesHolder == null )
+            resourcesHolder = new ResourcesHolder();
+        return resourcesHolder;
     }
 
     /**
@@ -33,6 +37,7 @@ public class ResourcesHolder
     public Future<DeliveryVehicle> acquireVehicle ()
     {
         //TODO: Implement this
+
         return null;
     }
 
