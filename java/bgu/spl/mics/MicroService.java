@@ -23,13 +23,14 @@ public abstract class MicroService implements Runnable
 
     private boolean terminated = false;
     private final String name;
-
+    MessageBusImpl massageBus = null;
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
     public MicroService ( String name )
-    {
+        {
+            this.massageBus = MessageBusImpl.getInctance();
         this.name = name;
     }
 
@@ -102,7 +103,7 @@ public abstract class MicroService implements Runnable
     protected final <T> Future<T> sendEvent ( Event<T> e )
     {
         //TODO: implement this.
-        return null; //TODO: delete this line :)
+        return massageBus.sendEvent( e ); //TODO: delete this line :)
     }
 
     /**
