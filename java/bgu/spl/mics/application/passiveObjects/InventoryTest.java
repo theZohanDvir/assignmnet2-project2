@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class InventoryTest
 {
     private BookInventoryInfo[] biiArr = null;
-    private static Inventory inventory = new Inventory();
+    private static Inventory inventory = Inventory.getInstance();
     BookInventoryInfo bii1 = new BookInventoryInfo( "AAA", 2, 25 );
     BookInventoryInfo bii2 = new BookInventoryInfo( "BBB", 3, 35 );
 
@@ -33,6 +33,9 @@ public class InventoryTest
     @org.junit.Test
     public void take ()
     {
+        biiArr = new BookInventoryInfo[1];
+        biiArr[0]=bii1;
+        inventory.load( biiArr );
         assertEquals( SUCCESSFULLY_TAKEN, inventory.take( "AAA" ) );
         assertEquals( NOT_IN_STOCK, inventory.take( "CCC" ) );
     }
@@ -40,11 +43,9 @@ public class InventoryTest
     @org.junit.Test
     public void checkAvailabiltyAndGetPrice ()
     {
-
-    }
-
-    @org.junit.Test
-    public void printInventoryToFile ()
-    {
+        BookInventoryInfo[] temp={bii1,bii2};
+        inventory.load(temp);
+        assertEquals(25,inventory.checkAvailabiltyAndGetPrice("AAA"));
+        assertEquals(35,inventory.checkAvailabiltyAndGetPrice("BBB"));
     }
 }

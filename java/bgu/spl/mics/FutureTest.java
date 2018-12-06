@@ -10,6 +10,7 @@ public class FutureTest
     @Test
     public void get ()
     {
+
     }
 
     @Test
