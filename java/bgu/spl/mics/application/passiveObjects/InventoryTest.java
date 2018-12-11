@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 
 public class InventoryTest
 {
+    //hadar the great
     private BookInventoryInfo[] biiArr = null;
     private static Inventory inventory = Inventory.getInstance();
     BookInventoryInfo bii1 = new BookInventoryInfo( "AAA", 2, 25 );
