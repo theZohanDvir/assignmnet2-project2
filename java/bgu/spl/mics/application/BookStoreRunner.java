@@ -1,5 +1,6 @@
 package bgu.spl.mics.application;
 
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -11,7 +12,8 @@ import com.google.gson.JsonParser;
  */
 public class BookStoreRunner
 {
-    private static final String filePath = "input.json";
+    private static final String filePath = "test.json";
+
     public static void main ( String[] args )
     {
         String str_obj = new Gson().toJson(filePath);
