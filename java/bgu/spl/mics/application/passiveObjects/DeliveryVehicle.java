@@ -6,53 +6,43 @@ package bgu.spl.mics.application.passiveObjects;
  * <p>
  * You may add ONLY private fields and methods to this class.
  */
-public class DeliveryVehicle
-{
-    private int license; // int – the vehicle license number.
-    private int speed; //  int- number of milliseconds needed for 1KM
-
-    /**
-     * Constructor.
+public class DeliveryVehicle {
+	private int license;//: int – the vehicle license number.
+	private int speed;//: int- number of milliseconds needed for 1KM.
+	/**
+     * Constructor.   
      */
-    public DeliveryVehicle ( int license, int speed )
-    {
-        // TODO Implement this
-        this.license = license;
-        this.speed = license;
-    }
-
-    /**
-     * Retrieves the license of this delivery vehicle.
+	 public DeliveryVehicle(int license, int speed) {
+		this.license=license;
+		this.speed=speed;
+	  }
+	/**
+     * Retrieves the license of this delivery vehicle.   
      */
-    public int getLicense ()
-    {
-        // TODO Implement this
-        return license;
-    }
-
-    /**
-     * Retrieves the speed of this vehicle person.
+	public int getLicense() {
+		return license;
+	}
+	
+	/**
+     * Retrieves the speed of this vehicle person.   
      * <p>
-     *
      * @return Number of ticks needed for 1 Km.
      */
-    public int getSpeed ()
-    {
-        // TODO Implement this
-        return speed;
-    }
-
-    /**
-     * Simulates a delivery by sleeping for the amount of time that
-     * it takes this vehicle to cover {@code distance} KMs.
+	public int getSpeed() {
+		return speed;
+	}
+	
+	/**
+     * Simulates a delivery by sleeping for the amount of time that 
+     * it takes this vehicle to cover {@code distance} KMs.  
      * <p>
-     *
-     * @param address  The address of the customer.
-     * @param distance The distance from the store to the customer.
+     * @param address	The address of the customer.
+     * @param distance	The distance from the store to the customer.
      */
-    public void deliver ( String address, int distance )
-    {
-        // TODO Implement this
-        //Thread.sleep( distance/speed );
-    }
+	public void deliver(String address, int distance) {
+		try {
+			Thread.sleep(distance/speed);
+		} catch (InterruptedException e) {
+		}
+	}
 }

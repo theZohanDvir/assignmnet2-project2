@@ -1,5 +1,8 @@
-package bgu.spl.mics.application.messages;
+package bgu.spl.mics.application.Message;
 
-public class FiftyPercentDiscount
-{
+import bgu.spl.mics.Event;
+
+public class FiftyPercentDiscount implements Event {
+
+
 }
