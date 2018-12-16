@@ -2,11 +2,11 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.Message.CheckAvailability;
-import bgu.spl.mics.application.Message.OrderBookEvent;
+import bgu.spl.mics.application.messages.CheckAvailability;
+import bgu.spl.mics.application.messages.OrderBookEvent;
 import bgu.spl.mics.application.passiveObjects.MoneyRegister;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
-import bgu.spl.mics.application.Message.TickBroadcast;
+import bgu.spl.mics.application.messages.TickBroadcast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,13 +35,13 @@ public class SellingService extends MicroService{
 	protected void initialize() {
      subscribeEvent(OrderBookEvent.class, ev ->{
      	int prossTick = tick;
-     	Future f = sendEvent(new CheckAvailability(ev.getBookName(),ev.getYosi().getAvailableCreditAmount()));
+     	Future f = sendEvent(new CheckAvailability(ev.getBookName(),ev.getCustomer().getAvailableCreditAmount()));
      	int result = (int) f.get((endTick-tick)*speed,t);
 
      	//create constractor Orderricipt
-		 if(ev.getYosi().getAvailableCreditAmount()>= result)
+		 if(ev.getCustomer().getAvailableCreditAmount()>= result)
 		 {
-			 moneyRegister.chargeCreditCard(ev.getYosi(),result);
+			 moneyRegister.chargeCreditCard(ev.getCustomer(),result);
 			 OrderReceipt r = new OrderReceipt(this.getName(), result, ev.getBookName(),tick,ev.getTick(),prossTick);
 			 moneyRegister.file(r);
 			 this.complete(ev,r);

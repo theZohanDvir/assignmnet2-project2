@@ -1,7 +1,7 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.Message.TickBroadcast;
+import bgu.spl.mics.application.messages.TickBroadcast;
 
 import java.util.Timer;
 import java.util.TimerTask;

@@ -2,10 +2,10 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.Message.DeliveryEvent;
-import bgu.spl.mics.application.Message.GetVehicle;
-import bgu.spl.mics.application.Message.ReturnVehicle;
-import bgu.spl.mics.application.Message.TickBroadcast;
+import bgu.spl.mics.application.messages.DeliveryEvent;
+import bgu.spl.mics.application.messages.GetVehicle;
+import bgu.spl.mics.application.messages.ReturnVehicle;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 
 import java.util.concurrent.TimeUnit;
