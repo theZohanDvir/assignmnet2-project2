@@ -25,12 +25,14 @@ public class LogisticsService extends MicroService {
 	private int endTick;
 	private  int speed;
 	public LogisticsService(int serviceNum ) {
-		super("Change_This_Name");
+		super("Logistic "+serviceNum);
 		// TODO Implement this
+		System.out.println( this.getName()+" cosnturct" );
 	}
 
 	@Override
 	protected void initialize() {
+		System.out.println( this.getName()+" cosnturct" );
     		subscribeEvent(DeliveryEvent.class, ev ->{
     			Future f = sendEvent( new GetVehicle());
     			DeliveryVehicle mazda = (DeliveryVehicle)f.get((endTick-tick)*speed,t);

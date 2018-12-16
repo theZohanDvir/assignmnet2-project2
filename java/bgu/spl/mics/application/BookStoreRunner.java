@@ -77,10 +77,7 @@ public class BookStoreRunner
             e.printStackTrace();
         }
         List<Thread> list = new ArrayList<Thread>();
-        for ( int i = 0 ; i < customers.length ; i++ )
-        {// APIService Thread Add
-            list.add( new Thread( new APIService( i+1 ,boeList) ) );
-        }
+
         for ( int i = 0 ; i < selling ; i++ )
         {// SellingService Thread Add
             list.add( new Thread( new SellingService( i + 1 ) ) );
@@ -97,7 +94,10 @@ public class BookStoreRunner
         {// ResourceService Thread Add
             list.add( new Thread( new ResourceService( i + 1 ) ) );
         }
-
+        for ( int i = 0 ; i < customers.length ; i++ )
+        {// APIService Thread Add
+            list.add( new Thread( new APIService( i+1 ,boeList) ) );
+        }
         for ( int i = 0 ; i < list.size() ; i++ )
         {// Run all Threads
             list.get( i ).run();

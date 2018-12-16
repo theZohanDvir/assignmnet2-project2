@@ -26,12 +26,14 @@ public class InventoryService extends MicroService{
 
 
 	public InventoryService(int serviceNum ) {
-		super("Change_This_Name");
+		super("inv"+serviceNum);
 		inventory = Inventory.getInstance();
+		System.out.println( this.getName()+" cosnturct" );
 	}
 
 	@Override
 	protected void initialize() {
+		System.out.println( this.getName()+" init" );
      subscribeEvent(CheckAvailability.class, ev ->{
      	int price=-1;
 	synchronized (inventory) {

@@ -23,11 +23,13 @@ int duration;
 		super("Change_This_Name");
 		this.duration = duration;
 		this.speed = speed;
+		System.out.println( this.getName()+" cosnturct" );
 	// TODO Implement this
 	}
 
 	@Override
 	protected void initialize() {
+		System.out.println( this.getName()+" init" );
 		Timer T = new Timer();
 		for (int i = 0; i <duration ; i++) {
 			int finalI = i;

@@ -30,13 +30,15 @@ public class SellingService extends MicroService
 
     public SellingService ( int serviceNum )
     {
-        super( "Change_This_Name" );
+        super( "Sell"+serviceNum );
         moneyRegister = MoneyRegister.getInstance();
+        System.out.println( this.getName()+" cosnturct" );
     }
 
     @Override
     protected void initialize ()
     {
+        System.out.println( this.getName()+" init" );
         subscribeEvent( OrderBookEvent.class, ev -> {
             int prossTick = tick;
             Future f = sendEvent( new CheckAvailability( ev.getBookName(), ev.getCustomer().getAvailableCreditAmount() ) );

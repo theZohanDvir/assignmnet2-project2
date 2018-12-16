@@ -25,12 +25,14 @@ public class ResourceService extends MicroService{
   private 	ResourcesHolder resourcesHolder;
 
 	public ResourceService(int serviceNum ) {
-		super("Change_This_Name");
+		super("Resource"+serviceNum);
 		resourcesHolder = ResourcesHolder.getInstance();
+		System.out.println( this.getName()+" cosnturct" );
 	}
 
 	@Override
 	protected void initialize() {
+		System.out.println( this.getName()+" init" );
     subscribeEvent(GetVehicle.class, ev ->{
     	complete(ev, resourcesHolder.acquireVehicle().get());
 

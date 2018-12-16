@@ -34,11 +34,13 @@ public class APIService extends MicroService
         super( "APIService" + serviceNum );
         // TODO Implement this
         this.listOrders = listOrders;
+        System.out.println( this.getName()+" cosnturct" );
     }
 
     @Override
     protected void initialize ()
     {
+        System.out.println( this.getName()+" init" );
         subscribeBroadcast( TickBroadcast.class, ev -> {
             tick = ev.getTick();
             endTick = ev.getEndTick();
