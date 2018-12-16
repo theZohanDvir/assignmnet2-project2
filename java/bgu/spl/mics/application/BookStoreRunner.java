@@ -99,7 +99,7 @@ public class BookStoreRunner
         }
         for ( int i = 0 ; i < list.size() ; i++ )
         {// Run all Threads
-            list.get( i ).run();
+            list.get( i ).start();
         }
 
     }
