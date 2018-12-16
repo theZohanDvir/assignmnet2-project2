@@ -22,7 +22,7 @@ public class OrderBookEvent implements Event<OrderReceipt>
         return bookName;
     }
 
-    public int getOrderTick ()
+    public int getTick ()
     {
         return orderTick;
     }

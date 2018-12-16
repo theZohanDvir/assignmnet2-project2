@@ -4,7 +4,9 @@ import bgu.spl.mics.Callback;
 import bgu.spl.mics.Event;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.DeliveryEvent;
 import bgu.spl.mics.application.messages.OrderBookEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 import java.util.HashMap;
@@ -41,7 +43,7 @@ public class APIService extends MicroService{
 //		{
 //
 //		}
-		subscribeBroadcast(TickBroadcast.class, ev->{
+		subscribeBroadcast( TickBroadcast.class, ev->{
 			tick = ev.getTick();
 			endTick=ev.getEndTick();
 			speed = ev.getSpeed();
@@ -62,7 +64,7 @@ public class APIService extends MicroService{
 				) {
 					OrderReceipt orderReceipt = (OrderReceipt) eventFutureHashMap.get(e).get((endTick - tick) * speed, t);
 					if (orderReceipt != null) {
-						e.getYosi().adReceipt(orderReceipt);
+						e.getCustomer().adReceipt(orderReceipt);
 						sendEvent(new DeliveryEvent());
 					}
 

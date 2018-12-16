@@ -1,8 +1,8 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.Message.CheckAvailability;
-import bgu.spl.mics.application.Message.TickBroadcast;
+import bgu.spl.mics.application.messages.CheckAvailability;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 
 import java.util.concurrent.TimeUnit;
