@@ -1,10 +1,11 @@
 package bgu.spl.mics;
 
-import bgu.spl.mics.example.messages.ExampleEvent;
+//import bgu.spl.mics.example.messages.ExampleEvent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * The MicroService is an abstract class that any micro-service in the system
@@ -26,7 +27,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public abstract class MicroService implements Runnable
 {
-
+    public CountDownLatch  c;
     private boolean terminated = false;
     private final String name;
     MessageBusImpl messageBus;
@@ -36,8 +37,9 @@ public abstract class MicroService implements Runnable
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
-    public MicroService ( String name )
+    public MicroService ( String name,CountDownLatch c )
     {
+        this.c = c;
         this.name = name;
         messageBus = MessageBusImpl.getInstance();
         q = new ConcurrentLinkedQueue<MyPair<? extends Message>>();

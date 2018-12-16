@@ -8,6 +8,7 @@ import bgu.spl.mics.application.messages.ReturnVehicle;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,8 +25,8 @@ public class LogisticsService extends MicroService {
 	TimeUnit t=TimeUnit.MILLISECONDS;
 	private int endTick;
 	private  int speed;
-	public LogisticsService(int serviceNum ) {
-		super("Logistic "+serviceNum);
+	public LogisticsService(int serviceNum, CountDownLatch c) {
+		super("Logistic "+serviceNum,c);
 		// TODO Implement this
 		System.out.println( this.getName()+" cosnturct" );
 	}
@@ -47,6 +48,7 @@ public class LogisticsService extends MicroService {
 			if (tick==endTick)
 				terminate();
 		});
+		c.countDown();
 	}
 
 }

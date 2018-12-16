@@ -24,17 +24,14 @@ public class MessageBusImpl implements MessageBus
     private ConcurrentHashMap<Event, Future> backToTheFuture = new ConcurrentHashMap<Event, Future>();
 
     // UltaDataBase holds the
-    private class SingletoneHolder
+    private static class SingletonHolder
     {
-
-        public MessageBusImpl instance = new MessageBusImpl();
-
+        private static MessageBusImpl instance = new MessageBusImpl();
     }
 
     public static MessageBusImpl getInstance ()
     {
-
-        return new MessageBusImpl();
+        return SingletonHolder.instance;
     }
 
 
@@ -42,10 +39,8 @@ public class MessageBusImpl implements MessageBus
     public <T> void subscribeEvent ( Class<? extends Event<T>> type, MicroService m )
     {
         // TODO Auto-generated method stub
-
-        if ( mapMessage.contains( m.getClass() ) )
+        if ( mapMessage.containsKey( m.getClass() ) )
         {
-
             mapMessage.get( m.getClass() ).add( type );
         }
         else
@@ -54,14 +49,13 @@ public class MessageBusImpl implements MessageBus
             q.add( type );
             mapMessage.put( m.getClass(), q );
         }
-
     }
 
     @Override
     public void subscribeBroadcast ( Class<? extends Broadcast> type, MicroService m )
     {
 
-        if ( mapMessage.contains( m.getClass() ) )
+        if ( mapMessage.containsKey( m.getClass() ) )
         {
             mapMessage.get( m.getClass() ).add( type );
         }
@@ -131,9 +125,10 @@ public class MessageBusImpl implements MessageBus
     @Override
     public void register ( MicroService m )
     {
-
+        System.out.println( m.getName() +" register" );
         for ( Class<? extends Message> messageType : mapMessage.get( m.getClass() ) )
         {
+
             LinkedBlockingQueue<Message> q = new LinkedBlockingQueue<Message>();
             Pair<MicroService, LinkedBlockingQueue<Message>> tmpPair = new Pair( m, q );
             try

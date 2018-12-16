@@ -8,6 +8,7 @@ import bgu.spl.mics.application.passiveObjects.MoneyRegister;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 import bgu.spl.mics.application.messages.TickBroadcast;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,9 +29,9 @@ public class SellingService extends MicroService
     MoneyRegister moneyRegister;
     int endTick = 1000;
 
-    public SellingService ( int serviceNum )
+    public SellingService ( int serviceNum ,CountDownLatch c)
     {
-        super( "Sell"+serviceNum );
+        super( "Sell"+serviceNum, c );
         moneyRegister = MoneyRegister.getInstance();
         System.out.println( this.getName()+" cosnturct" );
     }
@@ -59,6 +60,7 @@ public class SellingService extends MicroService
             endTick = ev.getEndTick();
             speed = ev.getSpeed();
         } );
+        c.countDown();
     }
 
 }

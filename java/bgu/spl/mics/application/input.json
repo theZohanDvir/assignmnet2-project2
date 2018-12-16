@@ -30,8 +30,8 @@
       "speed": 1000,
       "duration": 24
     },
-    "selling": 6,
-    "inventoryService": 3,
+    "selling": 1,
+    "inventoryService": 1,
     "logistics": 4,
     "resourcesService": 2,
     "customers": [

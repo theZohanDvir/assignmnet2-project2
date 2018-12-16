@@ -6,6 +6,7 @@ import bgu.spl.mics.application.messages.ReturnVehicle;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,8 +25,8 @@ public class ResourceService extends MicroService{
 	TimeUnit t=TimeUnit.MILLISECONDS;
   private 	ResourcesHolder resourcesHolder;
 
-	public ResourceService(int serviceNum ) {
-		super("Resource"+serviceNum);
+	public ResourceService( int serviceNum , CountDownLatch c) {
+		super("Resource"+serviceNum,c);
 		resourcesHolder = ResourcesHolder.getInstance();
 		System.out.println( this.getName()+" cosnturct" );
 	}
@@ -47,6 +48,7 @@ public class ResourceService extends MicroService{
 			if(tick==endTick)
 				terminate();
 		});
+		c.countDown();
 	}
 
 }

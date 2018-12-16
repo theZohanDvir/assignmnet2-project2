@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * This is the Main class of the application. You should parse the input file,
@@ -37,7 +38,7 @@ public class BookStoreRunner
         DeliveryVehicle[] deliveryVehicles;
         Customer[] customers = new Customer[0];
         List<OrderBookEvent> boeList = new ArrayList<OrderBookEvent>();
-        int timeSpeed, duration, selling = 0, inventoryService = 0, logistics = 0, resourcesService = 0;
+        int timeSpeed = 0, duration = 0, selling = 0, inventoryService = 0, logistics = 0, resourcesService = 0;
         File jsonFile = Paths.get( "C:\\input.json" ).toFile();
         try
         {
@@ -77,31 +78,40 @@ public class BookStoreRunner
             e.printStackTrace();
         }
         List<Thread> list = new ArrayList<Thread>();
-
+        CountDownLatch c = new CountDownLatch( 17 );
         for ( int i = 0 ; i < selling ; i++ )
         {// SellingService Thread Add
-            list.add( new Thread( new SellingService( i + 1 ) ) );
+            list.add( new Thread( new SellingService( i + 1 ,c) ) );
         }
         for ( int i = 0 ; i < inventoryService ; i++ )
         {// InventoryService Thread Add
-            list.add( new Thread( new InventoryService( i + 1 ) ) );
+            list.add( new Thread( new InventoryService( i + 1 ,c) ) );
         }
         for ( int i = 0 ; i < logistics ; i++ )
         {// LogisticsService Thread Add
-            list.add( new Thread( new LogisticsService( i + 1 ) ) );
+            list.add( new Thread( new LogisticsService( i + 1 ,c) ) );
         }
         for ( int i = 0 ; i < resourcesService ; i++ )
         {// ResourceService Thread Add
-            list.add( new Thread( new ResourceService( i + 1 ) ) );
+            list.add( new Thread( new ResourceService( i + 1 ,c) ) );
         }
         for ( int i = 0 ; i < customers.length ; i++ )
         {// APIService Thread Add
-            list.add( new Thread( new APIService( i+1 ,boeList) ) );
+            list.add( new Thread( new APIService( i + 1, boeList ,c  ) ) );
         }
         for ( int i = 0 ; i < list.size() ; i++ )
         {// Run all Threads
-            list.get( i ).run();
+            list.get( i ).start();
         }
+        try
+        {
+            c.await();
+        } catch ( InterruptedException e )
+        {
+            e.printStackTrace();
+        }
+        Thread time = new Thread( new TimeService( timeSpeed, duration ,c) );
+    time.start();
 
 
     }

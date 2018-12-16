@@ -5,6 +5,7 @@ import bgu.spl.mics.application.messages.CheckAvailability;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,8 +26,8 @@ public class InventoryService extends MicroService{
 	Inventory inventory;
 
 
-	public InventoryService(int serviceNum ) {
-		super("inv"+serviceNum);
+	public InventoryService( int serviceNum, CountDownLatch c ) {
+		super("inv"+serviceNum,c);
 		inventory = Inventory.getInstance();
 		System.out.println( this.getName()+" cosnturct" );
 	}
@@ -56,6 +57,7 @@ public class InventoryService extends MicroService{
 		});
 
 
+	c.countDown();
 	}
 
 }

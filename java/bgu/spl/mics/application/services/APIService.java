@@ -8,6 +8,7 @@ import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class APIService extends MicroService
 {
+
     TimeUnit t = TimeUnit.MILLISECONDS;
     int tick = 0;
     int endTick;
@@ -29,10 +31,11 @@ public class APIService extends MicroService
     List<OrderBookEvent> sentEvent;
     HashMap<OrderBookEvent, Future> eventFutureHashMap;
 
-    public APIService ( int serviceNum, List<OrderBookEvent> listOrders )
+    public APIService ( int serviceNum, List<OrderBookEvent> listOrders,CountDownLatch c )
     {
-        super( "APIService" + serviceNum );
+        super( "APIService" + serviceNum,c );
         // TODO Implement this
+
         this.listOrders = listOrders;
         System.out.println( this.getName()+" cosnturct" );
     }
@@ -76,5 +79,6 @@ public class APIService extends MicroService
 
             }
         } );
+        c.countDown();
     }
 }
