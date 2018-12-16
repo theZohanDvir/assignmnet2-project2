@@ -82,20 +82,25 @@ public class BookStoreRunner
         }
         List<Thread> list = new ArrayList<Thread>();
         for ( int i = 0 ; i < selling ; i++ )
-        {
-            list.add( new Thread( new SellingService ()) );
+        {// SellingService Thread Add
+            list.add( new Thread( new SellingService( i + 1 ) ) );
         }
         for ( int i = 0 ; i < inventoryService ; i++ )
-        {
-            list.add( new Thread( new InventoryService() ) );
+        {// InventoryService Thread Add
+            list.add( new Thread( new InventoryService( i + 1 ) ) );
         }
         for ( int i = 0 ; i < logistics ; i++ )
-        {
-            list.add( new Thread( new LogisticsService() ) );
+        {// LogisticsService Thread Add
+            list.add( new Thread( new LogisticsService( i + 1 ) ) );
         }
         for ( int i = 0 ; i < resourcesService ; i++ )
-        {
-            list.add( new Thread( new ResourceService() ) );
+        {// ResourceService Thread Add
+            list.add( new Thread( new ResourceService( i + 1 ) ) );
         }
+        for ( int i = 0 ; i < list.size() ; i++ )
+        {// Run all Threads
+            list.get( i ).run();
+        }
+
     }
 }

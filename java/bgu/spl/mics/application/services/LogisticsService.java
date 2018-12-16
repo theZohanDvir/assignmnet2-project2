@@ -14,7 +14,7 @@ import bgu.spl.mics.MicroService;
 public class LogisticsService extends MicroService
 {
 
-    public LogisticsService ()
+    public LogisticsService (int serviceNum)
     {
         super( "Change_This_Name" );
         // TODO Implement this

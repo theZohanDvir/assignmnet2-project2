@@ -17,7 +17,7 @@ public class InventoryService extends MicroService
 {
     Inventory inventory = null;
 
-    public InventoryService ()
+    public InventoryService (int serviceNum)
     {
         super( "InventoryService" );
         // TODO Implement this
