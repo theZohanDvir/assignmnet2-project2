@@ -17,6 +17,19 @@ public class Customer {
 	private int creditCard;//: int – The number of the credit card of the customer.
 	private int availableAmountInCreditCard;//: The remaining available amount of money in the creditcard of the customer.
 
+	public Customer()
+	{
+	}
+	public Customer(int id, String name, String address, int distance, int creditCard, int availableAmountInCreditCard)
+	{
+		this.id=id;
+		this.name=name;
+		this.address=address;
+		this.distance=distance;
+		this.creditCard=creditCard;
+		this.availableAmountInCreditCard=availableAmountInCreditCard;
+	}
+
 	/**
      * Retrieves the name of the customer.
      */

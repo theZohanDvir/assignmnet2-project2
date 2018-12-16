@@ -26,7 +26,7 @@ public class SellingService extends MicroService{
 	TimeUnit t=TimeUnit.MILLISECONDS;
     MoneyRegister moneyRegister;
     int endTick=1000;
-	public SellingService() {
+	public SellingService(int serviceNum ) {
 		super("Change_This_Name");
 		moneyRegister = MoneyRegister.getInstance();
 	}

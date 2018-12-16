@@ -24,7 +24,7 @@ public class LogisticsService extends MicroService {
 	TimeUnit t=TimeUnit.MILLISECONDS;
 	private int endTick;
 	private  int speed;
-	public LogisticsService() {
+	public LogisticsService(int serviceNum ) {
 		super("Change_This_Name");
 		// TODO Implement this
 	}

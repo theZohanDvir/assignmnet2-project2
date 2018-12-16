@@ -24,7 +24,7 @@ public class ResourceService extends MicroService{
 	TimeUnit t=TimeUnit.MILLISECONDS;
   private 	ResourcesHolder resourcesHolder;
 
-	public ResourceService() {
+	public ResourceService(int serviceNum ) {
 		super("Change_This_Name");
 		resourcesHolder = ResourcesHolder.getInstance();
 	}

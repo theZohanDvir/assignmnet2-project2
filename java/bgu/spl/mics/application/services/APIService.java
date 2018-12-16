@@ -4,7 +4,7 @@ import bgu.spl.mics.Callback;
 import bgu.spl.mics.Event;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.Message.*;
+import bgu.spl.mics.application.messages.OrderBookEvent;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 import java.util.HashMap;
@@ -29,8 +29,8 @@ public class APIService extends MicroService{
 	List<OrderBookEvent> listOrders;
 	List<OrderBookEvent> sentEvent;
 	HashMap<OrderBookEvent,Future> eventFutureHashMap;
-	public APIService() {
-		super("Change_This_Name");
+	public APIService( int serviceNum ) {
+		super("APIService" + serviceNum);
 		// TODO Implement this
 	}
 

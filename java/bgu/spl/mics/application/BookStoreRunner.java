@@ -1,7 +1,6 @@
 package bgu.spl.mics.application;
 
-
-import bgu.spl.mics.application.messages.BookOrderEvent;
+import bgu.spl.mics.application.messages.OrderBookEvent;
 import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
 import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
@@ -40,7 +39,7 @@ public class BookStoreRunner
         BookInventoryInfo[] bookInventoryInfos;
         DeliveryVehicle[] deliveryVehicles;
         Customer[] customers = new Customer[0];
-        List<BookOrderEvent> boeList = new ArrayList<BookOrderEvent>();
+        List<OrderBookEvent> boeList = new ArrayList<OrderBookEvent>();
         int timeSpeed, duration, selling = 0, inventoryService = 0, logistics = 0, resourcesService = 0;
         File jsonFile = Paths.get( "C:\\input.json" ).toFile();
         try
@@ -72,7 +71,7 @@ public class BookStoreRunner
                 int sizeOfOrders = jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( i ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().size();
                 for ( int j = 0 ; j < sizeOfOrders ; j++ )
                 {
-                    boeList.add( new BookOrderEvent( jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( 0 ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().get( j ).getAsJsonObject().get( "bookTitle" ).getAsString(), jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( 0 ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().get( j ).getAsJsonObject().get( "tick" ).getAsInt(), customers[i] ) );
+                    boeList.add( new OrderBookEvent( jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( 0 ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().get( j ).getAsJsonObject().get( "bookTitle" ).getAsString(), jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( 0 ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().get( j ).getAsJsonObject().get( "tick" ).getAsInt(), customers[i] ) );
                 }
             }
 
