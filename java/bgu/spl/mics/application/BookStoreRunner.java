@@ -6,6 +6,10 @@ import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
 import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
+import bgu.spl.mics.application.services.InventoryService;
+import bgu.spl.mics.application.services.LogisticsService;
+import bgu.spl.mics.application.services.ResourceService;
+import bgu.spl.mics.application.services.SellingService;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -35,9 +39,9 @@ public class BookStoreRunner
         Gson gson = new Gson();
         BookInventoryInfo[] bookInventoryInfos;
         DeliveryVehicle[] deliveryVehicles;
-        Customer[] customers;
+        Customer[] customers = new Customer[0];
         List<BookOrderEvent> boeList = new ArrayList<BookOrderEvent>();
-        int timeSpeed, duration, selling, inventoryService, logistics, resourcesService;
+        int timeSpeed, duration, selling = 0, inventoryService = 0, logistics = 0, resourcesService = 0;
         File jsonFile = Paths.get( "C:\\input.json" ).toFile();
         try
         {
@@ -62,14 +66,13 @@ public class BookStoreRunner
             resourcesService = jsonObject.getAsJsonObject( "services" ).get( "resourcesService" ).getAsInt();
             size = jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().size();
             customers = new Customer[size];
-            System.out.println( jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( 0 ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().size() );
             for ( int i = 0 ; i < size ; i++ )
             {
                 customers[i] = new Customer( jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( i ).getAsJsonObject().get( "id" ).getAsInt(), jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( i ).getAsJsonObject().get( "name" ).getAsString(), jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( i ).getAsJsonObject().get( "address" ).getAsString(), jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( i ).getAsJsonObject().get( "distance" ).getAsInt(), jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( i ).getAsJsonObject().get( "creditCard" ).getAsJsonObject().get( "number" ).getAsInt(), jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( i ).getAsJsonObject().get( "creditCard" ).getAsJsonObject().get( "amount" ).getAsInt() );
                 int sizeOfOrders = jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( i ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().size();
                 for ( int j = 0 ; j < sizeOfOrders ; j++ )
                 {
-                    boeList.add( new BookOrderEvent( jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( j ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().get( j ).getAsJsonObject().get( "bookTitle" ).getAsString(), jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( j ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().get( j ).getAsJsonObject().get( "tick" ).getAsInt(), customers[i] ) );
+                    boeList.add( new BookOrderEvent( jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( 0 ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().get( j ).getAsJsonObject().get( "bookTitle" ).getAsString(), jsonObject.getAsJsonObject( "services" ).get( "customers" ).getAsJsonArray().get( 0 ).getAsJsonObject().get( "orderSchedule" ).getAsJsonArray().get( j ).getAsJsonObject().get( "tick" ).getAsInt(), customers[i] ) );
                 }
             }
 
@@ -77,8 +80,22 @@ public class BookStoreRunner
         {
             e.printStackTrace();
         }
-
-
-
+        List<Thread> list = new ArrayList<Thread>();
+        for ( int i = 0 ; i < selling ; i++ )
+        {
+            list.add( new Thread( new SellingService ()) );
+        }
+        for ( int i = 0 ; i < inventoryService ; i++ )
+        {
+            list.add( new Thread( new InventoryService() ) );
+        }
+        for ( int i = 0 ; i < logistics ; i++ )
+        {
+            list.add( new Thread( new LogisticsService() ) );
+        }
+        for ( int i = 0 ; i < resourcesService ; i++ )
+        {
+            list.add( new Thread( new ResourceService() ) );
+        }
     }
 }
