@@ -18,6 +18,13 @@ public class OrderReceipt
     private int orderTick; // int - tick in which the customer ordered the book.
     private int proccessTick; // int – tick in which the selling service started processing the order.
 
+    public OrderReceipt(int customer, String bookTitle,int orderTick)
+    {
+        this.customer=customer;
+        this.bookTitle=bookTitle;
+        this.orderTick=orderTick;
+    }
+
     /**
      * Retrieves the orderId of this receipt.
      */
