@@ -97,10 +97,12 @@ public class BookStoreRunner
         {// ResourceService Thread Add
             list.add( new Thread( new ResourceService( i + 1 ) ) );
         }
+
         for ( int i = 0 ; i < list.size() ; i++ )
         {// Run all Threads
-            list.get( i ).start();
+            list.get( i ).run();
         }
+
 
     }
 }

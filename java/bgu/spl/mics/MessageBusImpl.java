@@ -15,152 +15,170 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Write your implementation here!
  * Only private fields and methods can be added to this class.
  */
-public class MessageBusImpl implements MessageBus {
+public class MessageBusImpl implements MessageBus
+{
 
 
-	//private ConcurrentHashMap<Class<? extends Event>, LinkedBlockingQueue <MicroService>> mapEvent;
-	private ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue <Class<? extends Event>>> mapEvent;
-	//private ConcurrentHashMap<Class<? extends Broadcast>, LinkedBlockingQueue <MicroService>> mapBroadcast;
-	private ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue <Class<? extends Broadcast>>> mapBroadcast;
-	//private ConcurrentHashMap<Class <MicroService>, LinkedBlockingQueue<Pair<MicroService,LinkedBlockingQueue<Message>>>> ultraDataBase ;
-	private ConcurrentHashMap<Class<? extends Message>,LinkedBlockingQueue<Pair<MicroService,LinkedBlockingQueue<Message>>>> ultraDataBase2;
-	private ConcurrentHashMap<Event,Future> backToTheFuture;
-	// UltaDataBase holds the
-	private class SingletoneHolder{
+    //private ConcurrentHashMap<Class<? extends Event>, LinkedBlockingQueue <MicroService>> mapEvent;
+    private ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Event>>> mapEvent = new ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Event>>>();
+    //private ConcurrentHashMap<Class<? extends Broadcast>, LinkedBlockingQueue <MicroService>> mapBroadcast;
+    private ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Broadcast>>> mapBroadcast = new ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Broadcast>>>();
+    //private ConcurrentHashMap<Class <MicroService>, LinkedBlockingQueue<Pair<MicroService,LinkedBlockingQueue<Message>>>> ultraDataBase ;
+    private ConcurrentHashMap<Class<? extends Message>, LinkedBlockingQueue<Pair<MicroService, LinkedBlockingQueue<Message>>>> ultraDataBase2 = new ConcurrentHashMap<Class<? extends Message>, LinkedBlockingQueue<Pair<MicroService, LinkedBlockingQueue<Message>>>>();
+    private ConcurrentHashMap<Event, Future> backToTheFuture = new ConcurrentHashMap<Event, Future>();
 
-		public MessageBusImpl instance=new MessageBusImpl();
+    // UltaDataBase holds the
+    private class SingletoneHolder
+    {
 
-	}
-	public static MessageBusImpl getInstance() {
+        public MessageBusImpl instance = new MessageBusImpl();
 
-		return new MessageBusImpl();
-	}
+    }
 
+    public static MessageBusImpl getInstance ()
+    {
 
-	@Override
-	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		// TODO Auto-generated method stub
-
-		if (mapEvent.contains(m.getClass()))
-		{
-			mapEvent.get(m.getClass()).add(type);
-		}
-		else
-		{
-			LinkedBlockingQueue<Class<? extends Event>> q = new LinkedBlockingQueue();
-			q.add(type);
-			mapEvent.put(m.getClass(), q);
-		}
-
-	}
-
-	@Override
-	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-
-		if (mapBroadcast.contains(m.getClass()))
-		{
-			mapBroadcast.get(m.getClass()).add(type);
-		}
-		else
-		{
-			LinkedBlockingQueue<Class<? extends Broadcast>> q = new LinkedBlockingQueue();
-			q.add(type);
-			mapBroadcast.put(m.getClass(), q);
-		}
+        return new MessageBusImpl();
+    }
 
 
-	}
+    @Override
+    public <T> void subscribeEvent ( Class<? extends Event<T>> type, MicroService m )
+    {
+        // TODO Auto-generated method stub
 
-	@Override
-	public <T> void complete(Event<T> e, T result) {
-		backToTheFuture.get(e).resolve(result);
+        if ( mapEvent.contains( m.getClass() ) )
+        {
+            mapEvent.get( m.getClass() ).add( type );
+        }
+        else
+        {
+            LinkedBlockingQueue<Class<? extends Event>> q = new LinkedBlockingQueue();
+            q.add( type );
+            mapEvent.put( m.getClass(), q );
+        }
 
-	}
+    }
 
-	@Override
-	public void sendBroadcast(Broadcast b) {
-		for (Pair<MicroService,LinkedBlockingQueue<Message>> pair :ultraDataBase2.get(b.getClass())  )
-		{
-			try {
-				pair.getValue().put(b);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    @Override
+    public void subscribeBroadcast ( Class<? extends Broadcast> type, MicroService m )
+    {
+
+        if ( mapBroadcast.contains( m.getClass() ) )
+        {
+            mapBroadcast.get( m.getClass() ).add( type );
+        }
+        else
+        {
+            LinkedBlockingQueue<Class<? extends Broadcast>> q = new LinkedBlockingQueue();
+            q.add( type );
+            mapBroadcast.put( m.getClass(), q );
+        }
 
 
-	@Override
-	public <T> Future<T> sendEvent(Event<T> e) {
+    }
 
-		try {
-			LinkedBlockingQueue msQ = ultraDataBase2.get(e.getClass());
-			if (msQ == null)
-			{
-				return null;
-			}
-			Pair <MicroService,LinkedBlockingQueue<Message>> tmp =ultraDataBase2.get(e.getClass()).take();
+    @Override
+    public <T> void complete ( Event<T> e, T result )
+    {
+        backToTheFuture.get( e ).resolve( result );
 
-			tmp.getValue().put(e);
-			ultraDataBase2.get(e.getClass()).put(tmp);
+    }
 
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+    @Override
+    public void sendBroadcast ( Broadcast b )
+    {
+        for ( Pair<MicroService, LinkedBlockingQueue<Message>> pair : ultraDataBase2.get( b.getClass() ) )
+        {
+            try
+            {
+                pair.getValue().put( b );
+            } catch ( InterruptedException e )
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 
-		Future future = new Future();
-		//if (backToTheFuture == null)
-		//{
-		//  Pair<>	backToTheFuture = new
-		//}
-		backToTheFuture.put(e,future);
-		return future;
-	}
 
-	@Override
-	public void register(MicroService m) {
+    @Override
+    public <T> Future<T> sendEvent ( Event<T> e )
+    {
 
-		for( Class<? extends Event> eventType :mapEvent.get(m.getClass()))
-		{
-			LinkedBlockingQueue <Message> q = new LinkedBlockingQueue<>();
-			Pair <MicroService,LinkedBlockingQueue<Message>>tmpPair = new Pair(m,q);
-			try {
-				ultraDataBase2.get(eventType).put(tmpPair);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		// LinkedBlockingQueue <Message> q = new LinkedBlockingQueue<>();
-		//Pair <MicroService,LinkedBlockingQueue<Message>>tmpPair = new Pair(m,q);
-		//ultraDataBase.get(m.getClass()).add(tmpPair);
+        try
+        {
+            LinkedBlockingQueue msQ = ultraDataBase2.get( e.getClass() );
+            if ( msQ == null )
+            {
+                return null;
+            }
+            Pair<MicroService, LinkedBlockingQueue<Message>> tmp = ultraDataBase2.get( e.getClass() ).take();
 
-	}
+            tmp.getValue().put( e );
+            ultraDataBase2.get( e.getClass() ).put( tmp );
 
-	@Override
-	public void unregister(MicroService m)
-	{
-		Class<? extends Event> e=mapEvent.get(m).peek();
-		ultraDataBase2.get(e.getClasses()).clear();
+        } catch ( InterruptedException e1 )
+        {
+            e1.printStackTrace();
+        }
 
-	}
+        Future future = new Future();
+        //if (backToTheFuture == null)
+        //{
+        //  Pair<>	backToTheFuture = new
+        //}
+        backToTheFuture.put( e, future );
+        return future;
+    }
 
-	@Override
-	public Message awaitMessage(MicroService m) throws InterruptedException {
-		for (Pair<MicroService,LinkedBlockingQueue<Message>> pair : ultraDataBase2.get(mapEvent.get(m.getClass()).peek()))
-		{
-			if (pair.getKey() == m)
-			{
-				return pair.getValue().take();
-			}
-		}
-		//for (Pair<MicroService, LinkedBlockingQueue<Message>> pair :ultraDataBase.get(m.getClass()))
-		//	{
-		// if(pair.getKey() == m)
-		//  {
-		//  	return pair.getValue().take();
-		//  }
+    @Override
+    public void register ( MicroService m )
+    {
 
-		//}
-		return null;
-	}
+        for ( Class<? extends Event> eventType : mapEvent.get( m.getClass() ) )
+        {
+            LinkedBlockingQueue<Message> q = new LinkedBlockingQueue<>();
+            Pair<MicroService, LinkedBlockingQueue<Message>> tmpPair = new Pair( m, q );
+            try
+            {
+                ultraDataBase2.get( eventType ).put( tmpPair );
+            } catch ( InterruptedException e )
+            {
+                e.printStackTrace();
+            }
+        }
+        // LinkedBlockingQueue <Message> q = new LinkedBlockingQueue<>();
+        //Pair <MicroService,LinkedBlockingQueue<Message>>tmpPair = new Pair(m,q);
+        //ultraDataBase.get(m.getClass()).add(tmpPair);
+
+    }
+
+    @Override
+    public void unregister ( MicroService m )
+    {
+        Class<? extends Event> e = mapEvent.get( m ).peek();
+        ultraDataBase2.get( e.getClasses() ).clear();
+
+    }
+
+    @Override
+    public Message awaitMessage ( MicroService m ) throws InterruptedException
+    {
+        for ( Pair<MicroService, LinkedBlockingQueue<Message>> pair : ultraDataBase2.get( mapEvent.get( m.getClass() ).peek() ) )
+        {
+            if ( pair.getKey() == m )
+            {
+                return pair.getValue().take();
+            }
+        }
+        //for (Pair<MicroService, LinkedBlockingQueue<Message>> pair :ultraDataBase.get(m.getClass()))
+        //	{
+        // if(pair.getKey() == m)
+        //  {
+        //  	return pair.getValue().take();
+        //  }
+
+        //}
+        return null;
+    }
 }

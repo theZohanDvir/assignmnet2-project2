@@ -1,9 +1,6 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Callback;
-import bgu.spl.mics.Event;
-import bgu.spl.mics.Future;
-import bgu.spl.mics.MicroService;
+import bgu.spl.mics.*;
 import bgu.spl.mics.application.messages.DeliveryEvent;
 import bgu.spl.mics.application.messages.OrderBookEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
@@ -24,7 +21,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class APIService extends MicroService
 {
-
     TimeUnit t = TimeUnit.MILLISECONDS;
     int tick = 0;
     int endTick;
@@ -43,11 +39,6 @@ public class APIService extends MicroService
     @Override
     protected void initialize ()
     {
-
-        //		while(!listOrders.isEmpty())
-        //		{
-        //
-        //		}
         subscribeBroadcast( TickBroadcast.class, ev -> {
             tick = ev.getTick();
             endTick = ev.getEndTick();
