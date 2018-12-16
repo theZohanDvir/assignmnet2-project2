@@ -5,10 +5,7 @@ import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
 import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
-import bgu.spl.mics.application.services.InventoryService;
-import bgu.spl.mics.application.services.LogisticsService;
-import bgu.spl.mics.application.services.ResourceService;
-import bgu.spl.mics.application.services.SellingService;
+import bgu.spl.mics.application.services.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -80,6 +77,10 @@ public class BookStoreRunner
             e.printStackTrace();
         }
         List<Thread> list = new ArrayList<Thread>();
+        for ( int i = 0 ; i < customers.length ; i++ )
+        {// APIService Thread Add
+            list.add( new Thread( new APIService( i+1 ,boeList) ) );
+        }
         for ( int i = 0 ; i < selling ; i++ )
         {// SellingService Thread Add
             list.add( new Thread( new SellingService( i + 1 ) ) );
