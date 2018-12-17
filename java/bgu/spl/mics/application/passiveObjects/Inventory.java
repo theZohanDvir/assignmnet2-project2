@@ -18,7 +18,6 @@ import static bgu.spl.mics.application.passiveObjects.OrderResult.SUCCESSFULLY_T
 public class Inventory
 {
     private BookInventoryInfo[] bookInventoryInfo;
-    private static Inventory inventory = null;
 
     /**
      * Retrieves the single instance of this class.

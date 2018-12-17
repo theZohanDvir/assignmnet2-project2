@@ -111,8 +111,14 @@ public class BookStoreRunner
             e.printStackTrace();
         }
         Thread time = new Thread( new TimeService( timeSpeed, duration ,c) );
-    time.start();
-
+        time.start();
+        try
+        {
+            time.join();
+        } catch ( InterruptedException e )
+        {
+            e.printStackTrace();
+        }
 
     }
 }
