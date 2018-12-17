@@ -19,12 +19,12 @@ import java.util.concurrent.CountDownLatch;
  */
 public class TimeService extends MicroService
 {
-    int speed;
-    int duration;
+    private int speed;
+    private int duration;
 
-    public TimeService ( int speed, int duration , CountDownLatch c)
+    public TimeService ( int speed, int duration, CountDownLatch c )
     {
-        super( "TimerService ",c);
+        super( "TimerService ", c );
         this.duration = duration;
         this.speed = speed;
         System.out.println( this.getName() + " cosnturct" );
@@ -37,26 +37,27 @@ public class TimeService extends MicroService
         System.out.println( this.getName() + " init" );
         Timer T = new Timer();
         //int  finalI =1;
-            T.schedule( new TimerTask()
-            {int i=1;
-                @Override
+        T.schedule( new TimerTask()
+        {
+            int i = 1;
 
-                public void run ()
+            @Override
+
+            public void run ()
+            {
+
+
+                if ( i <= duration )
                 {
-
-
-                    if(i<=duration)
-                    {
-                        sendBroadcast( new TickBroadcast( i, duration, speed ) );
-                        i++;
-                        System.out.println( "Current Tick: " + i );
-                    }
-                    else
-                        terminate();
+                    sendBroadcast( new TickBroadcast( i, duration, speed ) );
+                    i++;
+                    System.out.println( "Current Tick: " + i );
                 }
+                else
+                    terminate();
+            }
 
-            }, 0, speed );
-
+        }, 0, speed );
 
 
     }

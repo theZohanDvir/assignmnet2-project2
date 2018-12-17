@@ -25,21 +25,21 @@ public class SellingService extends MicroService
 {
     private int tick = 1;
     private int speed;
-    TimeUnit t = TimeUnit.MILLISECONDS;
-    MoneyRegister moneyRegister;
-    int endTick = 1000;
+    private TimeUnit t = TimeUnit.MILLISECONDS;
+    private MoneyRegister moneyRegister;
+    private int endTick = 1000;
 
-    public SellingService ( int serviceNum ,CountDownLatch c)
+    public SellingService ( int serviceNum, CountDownLatch c )
     {
-        super( "Sell"+serviceNum, c );
+        super( "Sell" + serviceNum, c );
         moneyRegister = MoneyRegister.getInstance();
-        System.out.println( this.getName()+" cosnturct" );
+        System.out.println( this.getName() + " cosnturct" );
     }
 
     @Override
     protected void initialize ()
     {
-        System.out.println( this.getName()+" init" );
+        System.out.println( this.getName() + " init" );
         subscribeEvent( OrderBookEvent.class, ev -> {
             int prossTick = tick;
             Future f = sendEvent( new CheckAvailability( ev.getBookName(), ev.getCustomer().getAvailableCreditAmount() ) );

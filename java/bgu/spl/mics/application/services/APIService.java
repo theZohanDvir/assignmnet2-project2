@@ -23,27 +23,27 @@ import java.util.concurrent.TimeUnit;
 public class APIService extends MicroService
 {
 
-    TimeUnit t = TimeUnit.MILLISECONDS;
-    int tick = 0;
-    int endTick;
-    int speed;
-    List<OrderBookEvent> listOrders;
-    List<OrderBookEvent> sentEvent;
-    HashMap<OrderBookEvent, Future> eventFutureHashMap;
+    private TimeUnit t = TimeUnit.MILLISECONDS;
+    private int tick = 0;
+    private int endTick;
+    private int speed;
+    private List<OrderBookEvent> listOrders;
+    private List<OrderBookEvent> sentEvent;
+    private HashMap<OrderBookEvent, Future> eventFutureHashMap;
 
-    public APIService ( int serviceNum, List<OrderBookEvent> listOrders,CountDownLatch c )
+    public APIService ( int serviceNum, List<OrderBookEvent> listOrders, CountDownLatch c )
     {
-        super( "APIService" + serviceNum,c );
+        super( "APIService" + serviceNum, c );
         // TODO Implement this
 
         this.listOrders = listOrders;
-        System.out.println( this.getName()+" cosnturct" );
+        System.out.println( this.getName() + " cosnturct" );
     }
 
     @Override
     protected void initialize ()
     {
-        System.out.println( this.getName()+" init" );
+        System.out.println( this.getName() + " init" );
         subscribeBroadcast( TickBroadcast.class, ev -> {
             tick = ev.getTick();
             endTick = ev.getEndTick();
