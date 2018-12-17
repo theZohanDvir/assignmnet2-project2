@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,8 +15,7 @@ import java.util.List;
  */
 public class MoneyRegister
 {
-    private List<OrderReceipt> orderReceiptList;
-    private static MoneyRegister moneyRegister = null;
+    private List<OrderReceipt> orderReceiptList = new ArrayList<OrderReceipt>(  );
 
     /**
      * Retrieves the single instance of this class.

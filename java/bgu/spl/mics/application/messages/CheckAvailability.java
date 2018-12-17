@@ -5,7 +5,7 @@ import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
 
 public class CheckAvailability  implements Event<Integer> {
     private String bookName;
-    int credit;
+    private int credit;
     public CheckAvailability(String bookName, int credit)
     {
         this.bookName = bookName;

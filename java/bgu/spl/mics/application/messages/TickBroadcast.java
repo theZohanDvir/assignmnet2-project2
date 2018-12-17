@@ -3,9 +3,9 @@ package bgu.spl.mics.application.messages;
 import bgu.spl.mics.Broadcast;
 
 public class TickBroadcast implements Broadcast {
-    int tick;
-    int endTick;
-    int speed;
+    private int tick;
+    private int endTick;
+    private int speed;
     public TickBroadcast(int tick,int endTick,int speed){
         this.tick = tick;
         this.endTick = endTick;
