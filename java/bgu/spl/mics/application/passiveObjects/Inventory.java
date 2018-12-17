@@ -17,7 +17,7 @@ import static bgu.spl.mics.application.passiveObjects.OrderResult.SUCCESSFULLY_T
 
 public class Inventory
 {
-    private BookInventoryInfo[] bookInventoryInfo;
+    private BookInventoryInfo[] bookInventoryInfo=new BookInventoryInfo[0];
 
     /**
      * Retrieves the single instance of this class.
@@ -91,6 +91,7 @@ public class Inventory
         for ( BookInventoryInfo currbook : bookInventoryInfo )
         {
             if ( currbook.getBookTitle().equals( book ) )
+                if ( currbook.getAmountInInventory() > 0 )
                 return currbook.getPrice();
         }
         return -1;

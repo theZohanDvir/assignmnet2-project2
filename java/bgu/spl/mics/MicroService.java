@@ -2,6 +2,8 @@ package bgu.spl.mics;
 
 //import bgu.spl.mics.example.messages.ExampleEvent;
 
+import bgu.spl.mics.application.services.TimeService;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -27,7 +29,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public abstract class MicroService implements Runnable
 {
-    public CountDownLatch  c;
+    public CountDownLatch c;
     private boolean terminated = false;
     private final String name;
     MessageBusImpl messageBus;
@@ -37,7 +39,7 @@ public abstract class MicroService implements Runnable
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
-    public MicroService ( String name,CountDownLatch c )
+    public MicroService ( String name, CountDownLatch c )
     {
         this.c = c;
         this.name = name;
@@ -181,24 +183,28 @@ public abstract class MicroService implements Runnable
     {
         initialize();
         //todo: ask if subscribed
-        messageBus.register( this );
-        while ( !terminated )
+        if ( this.getClass() != TimeService.class )
         {
-            try
-            {
-                Message msg = messageBus.awaitMessage( this );
-                for ( MyPair<? extends Message> pair : q )
-                {
-                    pair.call( msg );
-                }
+            messageBus.register( this );
 
-            } catch ( InterruptedException ie )
+            while ( !terminated )
             {
-                //terminate();
+                try
+                {
+                    Message msg = messageBus.awaitMessage( this );
+                    for ( MyPair<? extends Message> pair : q )
+                    {
+                        if ( pair.getKey() == msg.getClass() )
+                            pair.call( msg );
+                    }
+
+                } catch ( InterruptedException ie )
+                {
+                    //terminate();
+                }
+                // System.out.println( "NOT IMPLEMENTED!!!" ); //TODO: you should delete this line :)
             }
-            System.out.println( "NOT IMPLEMENTED!!!" ); //TODO: you should delete this line :)
         }
 
-
     }
-}
+    }

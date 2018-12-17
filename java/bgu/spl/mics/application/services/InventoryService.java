@@ -39,6 +39,7 @@ public class InventoryService extends MicroService
     {
         System.out.println( this.getName() + " init" );
         subscribeEvent( CheckAvailability.class, ev -> {
+            System.out.println( "check "+ev.getBookName() );
             int price = -1;
             synchronized ( inventory )
             {

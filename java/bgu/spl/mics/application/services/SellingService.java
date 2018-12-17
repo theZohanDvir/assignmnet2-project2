@@ -41,7 +41,9 @@ public class SellingService extends MicroService
     {
         System.out.println( this.getName() + " init" );
         subscribeEvent( OrderBookEvent.class, ev -> {
+            System.out.println( "order recived "+ev.getBookName()  );
             int prossTick = tick;
+            System.out.println( "check" );
             Future f = sendEvent( new CheckAvailability( ev.getBookName(), ev.getCustomer().getAvailableCreditAmount() ) );
             int result = (int) f.get( ( endTick - tick ) * speed, t );
 
@@ -52,6 +54,7 @@ public class SellingService extends MicroService
                 OrderReceipt r = new OrderReceipt( this.getName(), result, ev.getBookName(), tick, ev.getTick(), prossTick );
                 moneyRegister.file( r );
                 this.complete( ev, r );
+                System.out.println( this.getName() + " complete" );
             }
 
         } );

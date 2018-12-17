@@ -11,4 +11,8 @@ public class MyPair<T extends Message> {
         if(msgClass.isInstance(msg))
             callback.call(msgClass.cast(msg));
     }
+    public Class<T> getKey()
+    {
+        return msgClass;
+    }
 }

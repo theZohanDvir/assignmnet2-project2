@@ -46,7 +46,10 @@ public class Future<T> {
 	public void resolve (T result) {
 		this.result = result;
 		isDone=true;
-		notifyAll();
+		synchronized ( this )
+		{
+			notifyAll();
+		}
 	}
 
 	
@@ -71,7 +74,10 @@ public class Future<T> {
      */
 	public T get(long timeout, TimeUnit unit) {
 		try {
-			this.wait(unit.toMillis(timeout));
+			synchronized ( this )
+			{
+				this.wait( unit.toMillis( timeout ) );
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

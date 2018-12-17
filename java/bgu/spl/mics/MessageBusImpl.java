@@ -45,7 +45,7 @@ public class MessageBusImpl implements MessageBus
         }
         else
         {
-            LinkedBlockingQueue<Class<? extends Message>> q = new LinkedBlockingQueue();
+            LinkedBlockingQueue<Class<? extends Message>> q = new LinkedBlockingQueue<Class<? extends Message>>();
             q.add( type );
             mapMessage.put( m.getClass(), q );
         }
@@ -61,7 +61,7 @@ public class MessageBusImpl implements MessageBus
         }
         else
         {
-            LinkedBlockingQueue<Class<? extends Message>> q = new LinkedBlockingQueue();
+            LinkedBlockingQueue<Class<? extends Message>> q = new LinkedBlockingQueue<Class<? extends Message>> ();
             q.add( type );
             mapMessage.put( m.getClass(), q );
         }
@@ -72,7 +72,15 @@ public class MessageBusImpl implements MessageBus
     @Override
     public <T> void complete ( Event<T> e, T result )
     {
-        backToTheFuture.get( e ).resolve( result );
+        System.out.println( result.toString() );
+        try
+        {
+            backToTheFuture.get( e ).resolve( result );
+        }
+        catch ( NullPointerException ex ){
+          ex.getCause();
+           System.out.println("prob"+ e.getClass().getName());
+        }
 
     }
 

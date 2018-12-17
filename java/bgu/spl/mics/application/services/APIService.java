@@ -6,6 +6,7 @@ import bgu.spl.mics.application.messages.OrderBookEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -28,8 +29,8 @@ public class APIService extends MicroService
     private int endTick;
     private int speed;
     private List<OrderBookEvent> listOrders;
-    private List<OrderBookEvent> sentEvent;
-    private HashMap<OrderBookEvent, Future> eventFutureHashMap;
+    private List<OrderBookEvent> sentEvent = new ArrayList<>();
+    private HashMap<OrderBookEvent, Future> eventFutureHashMap= new HashMap<>();
 
     public APIService ( int serviceNum, List<OrderBookEvent> listOrders, CountDownLatch c )
     {
@@ -58,12 +59,17 @@ public class APIService extends MicroService
                 {
                     if ( bookEvent.getTick() <= tick )
                     {
+                        System.out.println( "book sent "+bookEvent.getBookName() );
                         Future f = sendEvent( bookEvent );
                         sentEvent.add( bookEvent );
-                        listOrders.remove( bookEvent );
+                     //   listOrders.remove( bookEvent );
                         eventFutureHashMap.put( bookEvent, f );
-
                     }
+                }
+                for (OrderBookEvent OBE :sentEvent )
+                {
+                    if(listOrders.contains( OBE ))
+                         listOrders.remove( OBE );
                 }
                 for ( OrderBookEvent e : sentEvent )
                 {
@@ -72,6 +78,8 @@ public class APIService extends MicroService
                     {
                         e.getCustomer().adReceipt( orderReceipt );
                         sendEvent( new DeliveryEvent() );
+                        System.out.println( "delivery" );
+
                     }
 
                 }

@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class Customer {
 	private String name;//: String – The name of the customer.
 	private String address;//: String – The address of the customer.
 	private int distance;//: int – the distance of the customer’s address from the store.
-	private List <OrderReceipt> customerReceiptList;//: List – all the receipts issued to the customer.
+	private List <OrderReceipt> customerReceiptList= new ArrayList<>(  );//: List – all the receipts issued to the customer.
 	private int creditCard;//: int – The number of the credit card of the customer.
 	private int availableAmountInCreditCard;//: The remaining available amount of money in the creditcard of the customer.
 

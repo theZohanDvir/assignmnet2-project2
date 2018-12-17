@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ResourcesHolder
 {
     private static ResourcesHolder resourcesHolder = null;
-    private LinkedBlockingQueue<DeliveryVehicle> deliveryVehicles;
+    private LinkedBlockingQueue<DeliveryVehicle> deliveryVehicles = new LinkedBlockingQueue<>(  );
 
 
     /**

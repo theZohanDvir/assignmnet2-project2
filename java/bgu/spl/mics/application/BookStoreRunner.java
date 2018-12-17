@@ -1,10 +1,7 @@
 package bgu.spl.mics.application;
 
 import bgu.spl.mics.application.messages.OrderBookEvent;
-import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
-import bgu.spl.mics.application.passiveObjects.Customer;
-import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
-import bgu.spl.mics.application.passiveObjects.OrderReceipt;
+import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.services.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -40,6 +37,7 @@ public class BookStoreRunner
         List<OrderBookEvent> boeList = new ArrayList<OrderBookEvent>();
         int timeSpeed = 0, duration = 0, selling = 0, inventoryService = 0, logistics = 0, resourcesService = 0;
         File jsonFile = Paths.get( "C:\\input.json" ).toFile();
+        Inventory inventory = new Inventory();
         try
         {
             JsonObject jsonObject = gson.fromJson( new FileReader( jsonFile ), JsonObject.class );
@@ -49,6 +47,8 @@ public class BookStoreRunner
             {
                 bookInventoryInfos[i] = new BookInventoryInfo( jsonObject.getAsJsonArray( "initialInventory" ).get( i ).getAsJsonObject().get( "bookTitle" ).getAsString(), jsonObject.getAsJsonArray( "initialInventory" ).get( i ).getAsJsonObject().get( "amount" ).getAsInt(), jsonObject.getAsJsonArray( "initialInventory" ).get( i ).getAsJsonObject().get( "price" ).getAsInt() );
             }
+
+            inventory.load( bookInventoryInfos );
             size = jsonObject.getAsJsonArray( "initialResources" ).get( 0 ).getAsJsonObject().get( "vehicles" ).getAsJsonArray().size();
             deliveryVehicles = new DeliveryVehicle[size];
             for ( int i = 0 ; i < size ; i++ )
@@ -77,27 +77,28 @@ public class BookStoreRunner
         {
             e.printStackTrace();
         }
+        int threadsNumber = selling + inventoryService + logistics + resourcesService + customers.length;
         List<Thread> list = new ArrayList<Thread>();
-        CountDownLatch c = new CountDownLatch( 17 );
+        CountDownLatch c = new CountDownLatch( threadsNumber );
         for ( int i = 0 ; i < selling ; i++ )
         {// SellingService Thread Add
-            list.add( new Thread( new SellingService( i + 1 ,c) ) );
+            list.add( new Thread( new SellingService( i + 1, c ) ) );
         }
         for ( int i = 0 ; i < inventoryService ; i++ )
         {// InventoryService Thread Add
-            list.add( new Thread( new InventoryService( i + 1 ,c) ) );
+            list.add( new Thread( new InventoryService( i + 1, c ) ) );
         }
         for ( int i = 0 ; i < logistics ; i++ )
         {// LogisticsService Thread Add
-            list.add( new Thread( new LogisticsService( i + 1 ,c) ) );
+            list.add( new Thread( new LogisticsService( i + 1, c ) ) );
         }
         for ( int i = 0 ; i < resourcesService ; i++ )
         {// ResourceService Thread Add
-            list.add( new Thread( new ResourceService( i + 1 ,c) ) );
+            list.add( new Thread( new ResourceService( i + 1, c ) ) );
         }
         for ( int i = 0 ; i < customers.length ; i++ )
         {// APIService Thread Add
-            list.add( new Thread( new APIService( i + 1, boeList ,c  ) ) );
+            list.add( new Thread( new APIService( i + 1, boeList, c ) ) );
         }
         for ( int i = 0 ; i < list.size() ; i++ )
         {// Run all Threads
@@ -110,7 +111,7 @@ public class BookStoreRunner
         {
             e.printStackTrace();
         }
-        Thread time = new Thread( new TimeService( timeSpeed, duration ,c) );
+        Thread time = new Thread( new TimeService( timeSpeed, duration, c ) );
         time.start();
         try
         {

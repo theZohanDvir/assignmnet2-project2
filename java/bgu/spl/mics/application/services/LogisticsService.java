@@ -41,7 +41,9 @@ public class LogisticsService extends MicroService
         subscribeEvent( DeliveryEvent.class, ev -> {
             Future f = sendEvent( new GetVehicle() );
             DeliveryVehicle mazda = (DeliveryVehicle) f.get( ( endTick - tick ) * speed, t );
+            System.out.println( "vehicle aquired" );
             mazda.deliver( "fgh", 5 );
+            System.out.println( "deliver Complete" );
             sendEvent( new ReturnVehicle( mazda ) );
             complete( ev, null );
         } );
