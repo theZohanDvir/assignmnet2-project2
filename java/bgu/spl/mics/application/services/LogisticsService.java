@@ -39,6 +39,7 @@ public class LogisticsService extends MicroService
     {
         System.out.println( this.getName() + " cosnturct" );
         subscribeEvent( DeliveryEvent.class, ev -> {
+            System.out.println( "del Ev" );
             Future f = sendEvent( new GetVehicle() );
             DeliveryVehicle mazda = (DeliveryVehicle) f.get( ( endTick - tick ) * speed, t );
             System.out.println( "vehicle aquired" );

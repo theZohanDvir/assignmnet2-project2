@@ -68,8 +68,8 @@ public class APIService extends MicroService
                 }
                 for (OrderBookEvent OBE :sentEvent )
                 {
-                    if(listOrders.contains( OBE ))
-                         listOrders.remove( OBE );
+                    //if(listOrders.contains( OBE ))
+                        // listOrders.remove( OBE );
                 }
                 for ( OrderBookEvent e : sentEvent )
                 {

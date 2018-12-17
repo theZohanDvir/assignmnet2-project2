@@ -43,9 +43,11 @@ public class ResourcesHolder
      */
     public Future<DeliveryVehicle> acquireVehicle ()
     {
+        System.out.println( "try vic" );
         try
         {
             DeliveryVehicle ferarri = deliveryVehicles.take();
+            System.out.println( "taken" );
             Future f = new Future();
             f.resolve( ferarri );
             return f;

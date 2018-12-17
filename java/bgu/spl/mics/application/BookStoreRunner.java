@@ -38,6 +38,7 @@ public class BookStoreRunner
         int timeSpeed = 0, duration = 0, selling = 0, inventoryService = 0, logistics = 0, resourcesService = 0;
         File jsonFile = Paths.get( "C:\\input.json" ).toFile();
         Inventory inventory = new Inventory();
+        ResourcesHolder resourcesHolder = new ResourcesHolder();
         try
         {
             JsonObject jsonObject = gson.fromJson( new FileReader( jsonFile ), JsonObject.class );
@@ -55,6 +56,7 @@ public class BookStoreRunner
             {
                 deliveryVehicles[i] = new DeliveryVehicle( jsonObject.getAsJsonArray( "initialResources" ).get( 0 ).getAsJsonObject().get( "vehicles" ).getAsJsonArray().get( i ).getAsJsonObject().get( "license" ).getAsInt(), jsonObject.getAsJsonArray( "initialResources" ).get( 0 ).getAsJsonObject().get( "vehicles" ).getAsJsonArray().get( 0 ).getAsJsonObject().get( "speed" ).getAsInt() );
             }
+            resourcesHolder.load( deliveryVehicles );
             timeSpeed = jsonObject.getAsJsonObject( "services" ).get( "time" ).getAsJsonObject().get( "speed" ).getAsInt();
             duration = jsonObject.getAsJsonObject( "services" ).get( "time" ).getAsJsonObject().get( "duration" ).getAsInt();
             selling = jsonObject.getAsJsonObject( "services" ).get( "selling" ).getAsInt();
