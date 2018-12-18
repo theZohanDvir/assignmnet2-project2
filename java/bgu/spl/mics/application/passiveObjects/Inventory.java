@@ -1,6 +1,8 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import java.util.HashMap;
+
 import static bgu.spl.mics.application.passiveObjects.OrderResult.NOT_IN_STOCK;
 import static bgu.spl.mics.application.passiveObjects.OrderResult.SUCCESSFULLY_TAKEN;
 
@@ -106,6 +108,10 @@ public class Inventory
      */
     public void printInventoryToFile ( String filename )
     {
-        //TODO: Implement this
+        HashMap<String,Integer> out= new HashMap<>();
+        for (BookInventoryInfo temp:bookInventoryInfo) {
+            out.put(temp.getBookTitle(),temp.getPrice()); }
+        writeToSeri temp = new writeToSeri();
+        temp.writeToSeri(out,filename);
     }
 }

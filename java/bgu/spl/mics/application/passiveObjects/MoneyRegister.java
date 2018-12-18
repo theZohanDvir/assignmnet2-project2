@@ -64,8 +64,6 @@ public class MoneyRegister
     public void chargeCreditCard ( Customer c, int amount )
     {
         c.amountToCharge(amount);
-
-
     }
 
     /**
@@ -75,6 +73,8 @@ public class MoneyRegister
      */
     public void printOrderReceipts ( String filename )
     {
+        writeToSeri out = new writeToSeri();
+        out.writeToSeri(orderReceiptList,filename);
 
     }
 }

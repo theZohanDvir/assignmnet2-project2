@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class SellingService extends MicroService
-{
+{   private  int counter=0;
     private int tick = 1;
     private int speed;
     private TimeUnit t = TimeUnit.MILLISECONDS;
@@ -40,6 +40,7 @@ public class SellingService extends MicroService
     protected void initialize ()
     {
         subscribeEvent( OrderBookEvent.class, ev -> {
+            counter++;
             System.out.println( "order recived "+ev.getBookName()  );
             int prossTick = tick;
             System.out.println( "check" );
@@ -47,14 +48,15 @@ public class SellingService extends MicroService
             int result = (int) f.get( ( endTick - tick ) * speed, t );
             System.out.println("aftercheck "+ev.getBookName() +" "+ result);
             //create constractor Orderricipt
-            if ( ev.getCustomer().getAvailableCreditAmount() >= result )
+            if ( ev.getCustomer().getAvailableCreditAmount() +300>= result )
             {
                 System.out.println("AFTER IF");
                 moneyRegister.chargeCreditCard( ev.getCustomer(), result );
                 OrderReceipt r = new OrderReceipt( this.getName(), result, ev.getBookName(), tick, ev.getTick(), prossTick );
                 moneyRegister.file( r );
+                System.out.println("receipt");
                 this.complete( ev, r );
-                System.out.println( this.getName() + " complete " +ev.getBookName());
+                System.out.println( this.getName() + " complete " +ev.getBookName() +tick);
             }
             complete(ev,new OrderReceipt(this.getName(), result, ev.getBookName(), tick, ev.getTick(), prossTick ));
         } );
@@ -62,6 +64,8 @@ public class SellingService extends MicroService
             tick = ev.getTick();
             endTick = ev.getEndTick();
             speed = ev.getSpeed();
+            if ( tick == endTick )
+                terminate();
         } );
         c.countDown();
     }

@@ -37,7 +37,10 @@ public class Future<T> {
     public T get() {
         while (!isDone()) {
             try {
-                wait();
+                synchronized (lock) {
+                    while (!isDone())
+                        lock.wait();
+                }
             } catch (InterruptedException e) {
 
             }
@@ -52,10 +55,7 @@ public class Future<T> {
         synchronized (lock) {
         this.result = result;
         isDone = true;
-
-
             while (f) {
-
                 lock.notifyAll();
                 f=false;
             }

@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
@@ -36,15 +37,17 @@ public class BookStoreRunner {
         Customer[] customers = new Customer[0];
         List<OrderBookEvent> boeList = new ArrayList<OrderBookEvent>();
         int timeSpeed = 0, duration = 0, selling = 0, inventoryService = 0, logistics = 0, resourcesService = 0;
-        File jsonFile = Paths.get("C:\\input.json").toFile();
+        File jsonFile = Paths.get("input.json").toFile();
         Inventory inventory;
         inventory = Inventory.getInstance();
-     //   MessageBusImpl messageBusImpl;
-      //  messageBusImpl=MessageBusImpl.getInstance();
-      //  MoneyRegister moneyRegister;
-      //  moneyRegister=MoneyRegister.getInstance();
+        //   MessageBusImpl messageBusImpl;
+        //  messageBusImpl=MessageBusImpl.getInstance();
+          MoneyRegister moneyRegister;//write to file
+          moneyRegister=MoneyRegister.getInstance();//write to file
         ResourcesHolder resourcesHolder;
         resourcesHolder = ResourcesHolder.getInstance();
+        List<Thread> list = new ArrayList<Thread>();
+        List<List<OrderBookEvent>> listsBoe = new ArrayList<List<OrderBookEvent>>();
         try {
             JsonObject jsonObject = gson.fromJson(new FileReader(jsonFile), JsonObject.class);
             int size = jsonObject.getAsJsonArray("initialInventory").size();
@@ -84,13 +87,15 @@ public class BookStoreRunner {
                             jsonObject.getAsJsonObject("services").get("customers").getAsJsonArray().get(i).getAsJsonObject().get("orderSchedule").getAsJsonArray().get(j).getAsJsonObject().get("tick").getAsInt(),
                             customers[i]));
                 }
+                listsBoe.add(boeList);
+                boeList = new ArrayList<>();
             }
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         int threadsNumber = selling + inventoryService + logistics + resourcesService + customers.length;
-        List<Thread> list = new ArrayList<Thread>();
         CountDownLatch c = new CountDownLatch(threadsNumber);
         for (int i = 0; i < selling; i++) {// SellingService Thread Add
             list.add(new Thread(new SellingService(i + 1, c)));
@@ -105,7 +110,7 @@ public class BookStoreRunner {
             list.add(new Thread(new ResourceService(i + 1, c)));
         }
         for (int i = 0; i < customers.length; i++) {// APIService Thread Add
-            list.add(new Thread(new APIService(i + 1, boeList, c)));
+            list.add(new Thread(new APIService(i + 1, listsBoe.get(i), c)));
         }
         for (int i = 0; i < list.size(); i++) {// Run all Threads
             list.get(i).start();
@@ -122,6 +127,13 @@ public class BookStoreRunner {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        writeToSeri out = new writeToSeri();//write to file
+        HashMap<Integer,Customer> temp1 = new HashMap<>();//write to file
+        for (Customer temp:customers) {//write to file
+            temp1.put(temp.getId(),temp); }//write to file
+        out.writeToSeri(customers,args[1]);//write to file
+        inventory.printInventoryToFile(args[2]);
+        moneyRegister.printOrderReceipts(args[3]);
+        out.writeToSeri(moneyRegister,args[4]);//write to file
     }
 }

@@ -42,8 +42,9 @@ public class LogisticsService extends MicroService
             DeliveryVehicle mazda = (DeliveryVehicle) f.get( ( endTick - tick ) * speed, t );
             System.out.println( "vehicle aquired" );
             mazda.deliver( "fgh", 5 );
-            System.out.println( "deliver Complete" );
+            System.out.println( "deliver Complete");
             sendEvent( new ReturnVehicle( mazda ) );
+            System.out.println("return ");
             complete( ev, null );
         } );
         subscribeBroadcast( TickBroadcast.class, ev -> {

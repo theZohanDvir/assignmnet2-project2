@@ -49,6 +49,7 @@ public class APIService extends MicroService
             speed = ev.getSpeed();
             if ( tick == endTick )
             {
+
                 terminate();
             }
             else
@@ -75,14 +76,13 @@ public class APIService extends MicroService
                     if ( orderReceipt != null )
                     {
                         e.getCustomer().adReceipt( orderReceipt );
-                        System.out.println("sent de "+e.getBookName());
+                        System.out.println("sent de "+e.getBookName() +getName());
                         sendEvent( new DeliveryEvent() );
-                        System.out.println( "delivery" );
-
+                        System.out.println( "delivery"+getName() );
                     }
 
                 }
-
+            sentEvent.clear();
 
             }
         } );

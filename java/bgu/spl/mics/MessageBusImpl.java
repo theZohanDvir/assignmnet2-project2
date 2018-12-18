@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.services.ResourceService;
 import bgu.spl.mics.application.services.SellingService;
 import javafx.util.Pair;
 
@@ -110,7 +111,6 @@ public class MessageBusImpl implements MessageBus
         //  Pair<>	backToTheFuture = new
         //}
         backToTheFuture.put( e, future );
-        System.out.println(e.toString() +" added " + backToTheFuture.size());
 
         try
         {
@@ -136,20 +136,21 @@ public class MessageBusImpl implements MessageBus
     @Override
     public void register ( MicroService m )
     {
+        if(m.getClass()== ResourceService.class){
+            int i=0;
+            i++;
+        }
+        LinkedBlockingQueue<Message> q = new LinkedBlockingQueue<Message>();
         for ( Class<? extends Message> messageType : mapMessage.get( m.getClass() ) )
         {
-
-            LinkedBlockingQueue<Message> q = new LinkedBlockingQueue<Message>();
             Pair<MicroService, LinkedBlockingQueue<Message>> tmpPair = new Pair( m, q );
             try
             {
-                if ( ultraDataBase2.get( messageType ) == null )
-                    ultraDataBase2.put( messageType, new LinkedBlockingQueue<Pair<MicroService, LinkedBlockingQueue<Message>>>() );
+               if ( ultraDataBase2.get( messageType ) == null ) {
+                    ultraDataBase2.put(messageType, new LinkedBlockingQueue<Pair<MicroService, LinkedBlockingQueue<Message>>>());
+                }
                 ultraDataBase2.get( messageType ).put( tmpPair );
-            } catch ( NullPointerException e )
-            {
-
-            } catch ( InterruptedException e )
+            }  catch ( InterruptedException e )
             {
                 e.printStackTrace();
             }
@@ -163,14 +164,18 @@ public class MessageBusImpl implements MessageBus
     @Override
     public void unregister ( MicroService m )
     {
-        Class<? extends Message> e = mapMessage.get( m ).peek();
-        ultraDataBase2.get( e.getClasses() ).clear();
+
+
+    //    Class<? extends Message> e = mapMessage.get( m ).peek();
+        System.out.println("WTF "+m.getName());
+     //   ultraDataBase2.get( e.getClasses() ).clear();
 
     }
 
     @Override
     public Message awaitMessage ( MicroService m ) throws InterruptedException
     {
+
         for ( Pair<MicroService, LinkedBlockingQueue<Message>> pair : ultraDataBase2.get( mapMessage.get( m.getClass() ).peek() ) )
         {
             if ( pair.getKey() == m )

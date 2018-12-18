@@ -38,22 +38,20 @@ public class TimeService extends MicroService
         //int  finalI =1;
         T.schedule( new TimerTask()
         {
-            int i = 0;
+            int i = 1;
 
             @Override
 
             public void run ()
             {
-
-
                 if ( i <= duration )
                 {
+                    System.out.println( "Current Tick: " + i );
                     sendBroadcast( new TickBroadcast( i, duration, speed ) );
                     i++;
-                    System.out.println( "Current Tick: " + i );
                 }
                 else
-                    terminate();
+                    T.cancel();
             }
 
         }, 0, speed );

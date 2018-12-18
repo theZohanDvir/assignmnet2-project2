@@ -40,6 +40,7 @@ public class ResourceService extends MicroService
 
         } );
         subscribeEvent( ReturnVehicle.class, ev -> {
+            System.out.println("vehclk");
             resourcesHolder.releaseVehicle( ev.getMazda() );
         } );
         subscribeBroadcast( TickBroadcast.class, ev -> {
