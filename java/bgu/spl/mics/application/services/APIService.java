@@ -38,13 +38,11 @@ public class APIService extends MicroService
         // TODO Implement this
 
         this.listOrders = listOrders;
-        System.out.println( this.getName() + " cosnturct" );
     }
 
     @Override
     protected void initialize ()
     {
-        System.out.println( this.getName() + " init" );
         subscribeBroadcast( TickBroadcast.class, ev -> {
             tick = ev.getTick();
             endTick = ev.getEndTick();
@@ -57,7 +55,7 @@ public class APIService extends MicroService
             {
                 for ( OrderBookEvent bookEvent : listOrders )
                 {
-                    if ( bookEvent.getTick() <= tick )
+                    if ( bookEvent.getTick() == tick )
                     {
                         System.out.println( "book sent "+bookEvent.getBookName() );
                         Future f = sendEvent( bookEvent );
@@ -66,17 +64,18 @@ public class APIService extends MicroService
                         eventFutureHashMap.put( bookEvent, f );
                     }
                 }
-                for (OrderBookEvent OBE :sentEvent )
-                {
-                    //if(listOrders.contains( OBE ))
-                        // listOrders.remove( OBE );
-                }
+              //  for (OrderBookEvent OBE :sentEvent )
+             //   {
+             //       if(listOrders.contains( OBE ))
+                   //     listOrders.remove( OBE );
+             //   }
                 for ( OrderBookEvent e : sentEvent )
                 {
                     OrderReceipt orderReceipt = (OrderReceipt) eventFutureHashMap.get( e ).get( ( endTick - tick ) * speed, t );
                     if ( orderReceipt != null )
                     {
                         e.getCustomer().adReceipt( orderReceipt );
+                        System.out.println("sent de "+e.getBookName());
                         sendEvent( new DeliveryEvent() );
                         System.out.println( "delivery" );
 

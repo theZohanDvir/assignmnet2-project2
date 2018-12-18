@@ -20,7 +20,7 @@ public class MessageBusImpl implements MessageBus
     //    private ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Event>>> mapEvent = new ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Event>>>();
     //    private ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Broadcast>>> mapBroadcast = new ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Broadcast>>>();
     private ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Message>>> mapMessage = new ConcurrentHashMap<Class<? extends MicroService>, LinkedBlockingQueue<Class<? extends Message>>>();
-    private ConcurrentHashMap<Class<? extends Message>, LinkedBlockingQueue<Pair<MicroService, LinkedBlockingQueue<Message>>>> ultraDataBase2 = new ConcurrentHashMap<Class<? extends Message>, LinkedBlockingQueue<Pair<MicroService, LinkedBlockingQueue<Message>>>>();
+    private ConcurrentHashMap<Class<? extends Message>, LinkedBlockingQueue<Pair<MicroService, LinkedBlockingQueue<Message>>>> ultraDataBase2 = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Event, Future> backToTheFuture = new ConcurrentHashMap<Event, Future>();
 
     // UltaDataBase holds the
@@ -28,7 +28,9 @@ public class MessageBusImpl implements MessageBus
     {
         private static MessageBusImpl instance = new MessageBusImpl();
     }
+    private MessageBusImpl(){
 
+    }
     public static MessageBusImpl getInstance ()
     {
         return SingletonHolder.instance;
@@ -64,6 +66,7 @@ public class MessageBusImpl implements MessageBus
             LinkedBlockingQueue<Class<? extends Message>> q = new LinkedBlockingQueue<Class<? extends Message>> ();
             q.add( type );
             mapMessage.put( m.getClass(), q );
+            return;
         }
 
 
@@ -72,15 +75,13 @@ public class MessageBusImpl implements MessageBus
     @Override
     public <T> void complete ( Event<T> e, T result )
     {
-        System.out.println( result.toString() );
-        try
-        {
-            backToTheFuture.get( e ).resolve( result );
-        }
-        catch ( NullPointerException ex ){
-          ex.getCause();
-           System.out.println("prob"+ e.getClass().getName());
-        }
+            try {
+                backToTheFuture.get( e ).resolve( result );
+            }
+            catch (NullPointerException ex){
+               System.out.println(( this.backToTheFuture.size()) +" "+backToTheFuture.size()+" "+backToTheFuture.containsKey(e)+"!!!");
+            }
+
 
     }
 
@@ -103,6 +104,13 @@ public class MessageBusImpl implements MessageBus
     @Override
     public <T> Future<T> sendEvent ( Event<T> e )
     {
+        Future future = new Future();
+        //if (backToTheFuture == null)
+        //{
+        //  Pair<>	backToTheFuture = new
+        //}
+        backToTheFuture.put( e, future );
+        System.out.println(e.toString() +" added " + backToTheFuture.size());
 
         try
         {
@@ -121,19 +129,13 @@ public class MessageBusImpl implements MessageBus
             e1.printStackTrace();
         }
 
-        Future future = new Future();
-        //if (backToTheFuture == null)
-        //{
-        //  Pair<>	backToTheFuture = new
-        //}
-        backToTheFuture.put( e, future );
+
         return future;
     }
 
     @Override
     public void register ( MicroService m )
     {
-        System.out.println( m.getName() +" register" );
         for ( Class<? extends Message> messageType : mapMessage.get( m.getClass() ) )
         {
 
@@ -176,14 +178,7 @@ public class MessageBusImpl implements MessageBus
                 return pair.getValue().take();
             }
         }
-        //for (Pair<MicroService, LinkedBlockingQueue<Message>> pair :ultraDataBase.get(m.getClass()))
-        //	{
-        // if(pair.getKey() == m)
-        //  {
-        //  	return pair.getValue().take();
-        //  }
-
-        //}
+        System.out.println("Null Returned + awaitMessage "+m.getName());
         return null;
     }
 }

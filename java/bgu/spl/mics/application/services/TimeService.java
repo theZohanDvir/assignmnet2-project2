@@ -27,7 +27,6 @@ public class TimeService extends MicroService
         super( "TimerService ", c );
         this.duration = duration;
         this.speed = speed;
-        System.out.println( this.getName() + " cosnturct" );
         // TODO Implement this
     }
 
@@ -39,7 +38,7 @@ public class TimeService extends MicroService
         //int  finalI =1;
         T.schedule( new TimerTask()
         {
-            int i = 1;
+            int i = 0;
 
             @Override
 

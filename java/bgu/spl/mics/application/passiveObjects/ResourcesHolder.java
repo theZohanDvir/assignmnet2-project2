@@ -15,9 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class ResourcesHolder
 {
-    private static ResourcesHolder resourcesHolder = null;
     private LinkedBlockingQueue<DeliveryVehicle> deliveryVehicles = new LinkedBlockingQueue<>(  );
-
 
     /**
      * Retrieves the single instance of this class.
@@ -55,6 +53,7 @@ public class ResourcesHolder
         {
             e.printStackTrace();
         }
+        System.out.println( "null returned" );
         return null;
     }
 
@@ -69,7 +68,7 @@ public class ResourcesHolder
     {
         try
         {
-            deliveryVehicles.put( vehicle );// put???
+            deliveryVehicles.put( vehicle );
         } catch ( InterruptedException e )
         {
             e.printStackTrace();

@@ -27,20 +27,18 @@ import java.util.concurrent.CountDownLatch;
  * Only private fields and methods may be added to this class.
  * <p>
  */
-public abstract class MicroService implements Runnable
-{
+public abstract class MicroService implements Runnable {
     public CountDownLatch c;
     private boolean terminated = false;
     private final String name;
-    MessageBusImpl messageBus;
+    private MessageBusImpl messageBus;
     ConcurrentLinkedQueue<MyPair<? extends Message>> q;
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
-    public MicroService ( String name, CountDownLatch c )
-    {
+    public MicroService(String name, CountDownLatch c) {
         this.c = c;
         this.name = name;
         messageBus = MessageBusImpl.getInstance();
@@ -69,10 +67,9 @@ public abstract class MicroService implements Runnable
      *                 {@code type} are taken from this micro-service message
      *                 queue.
      */
-    protected final <T, E extends Event<T>> void subscribeEvent ( Class<E> type, Callback<E> callback )
-    {
-        q.add( new MyPair<>( type, callback ) );
-        messageBus.subscribeEvent( type, this );
+    protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
+        q.add(new MyPair<>(type, callback));
+        messageBus.subscribeEvent(type, this);
     }
 
     /**
@@ -96,10 +93,9 @@ public abstract class MicroService implements Runnable
      *                 {@code type} are taken from this micro-service message
      *                 queue.
      */
-    protected final <B extends Broadcast> void subscribeBroadcast ( Class<B> type, Callback<B> callback )
-    {
-        q.add( new MyPair<>( type, callback ) );
-        messageBus.subscribeBroadcast( type, this );
+    protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
+        q.add(new MyPair<>(type, callback));
+        messageBus.subscribeBroadcast(type, this);
     }
 
     /**
@@ -115,10 +111,9 @@ public abstract class MicroService implements Runnable
      * micro-service processing this event.
      * null in case no micro-service has subscribed to {@code e.getClass()}.
      */
-    protected final <T> Future<T> sendEvent ( Event<T> e )
-    {
+    protected final <T> Future<T> sendEvent(Event<T> e) {
         //TODO: implement this.
-        return messageBus.sendEvent( e );
+        return messageBus.sendEvent(e);
     }
 
     /**
@@ -128,9 +123,8 @@ public abstract class MicroService implements Runnable
      *
      * @param b The broadcast message to send
      */
-    protected final void sendBroadcast ( Broadcast b )
-    {
-        messageBus.sendBroadcast( b );
+    protected final void sendBroadcast(Broadcast b) {
+        messageBus.sendBroadcast(b);
     }
 
     /**
@@ -144,33 +138,31 @@ public abstract class MicroService implements Runnable
      * @param result The result to resolve the relevant Future object.
      *               {@code e}.
      */
-    protected final <T> void complete ( Event<T> e, T result )
-    {
-        messageBus.complete( e, result );
+    protected final <T> void complete(Event<T> e, T result) {
+        messageBus.complete(e, result);
 
     }
 
     /**
      * this method is called once when the event loop starts.
      */
-    protected abstract void initialize ();
+    protected abstract void initialize();
 
     /**
      * Signals the event loop that it must terminate after handling the current
      * message.
      */
-    protected final void terminate ()
-    {
+    protected final void terminate() {
         this.terminated = true;
-        messageBus.unregister( this );
+        if (this.getClass() != TimeService.class)
+            messageBus.unregister(this);
     }
 
     /**
      * @return the name of the service - the service name is given to it in the
      * construction time and is used mainly for debugging purposes.
      */
-    public final String getName ()
-    {
+    public final String getName() {
         return name;
     }
 
@@ -179,32 +171,25 @@ public abstract class MicroService implements Runnable
      * otherwise you will end up in an infinite loop.
      */
     @Override
-    public final void run ()
-    {
+    public final void run() {
         initialize();
         //todo: ask if subscribed
-        if ( this.getClass() != TimeService.class )
-        {
-            messageBus.register( this );
+        if (this.getClass() != TimeService.class) {
+            messageBus.register(this);
 
-            while ( !terminated )
-            {
-                try
-                {
-                    Message msg = messageBus.awaitMessage( this );
-                    for ( MyPair<? extends Message> pair : q )
-                    {
-                        if ( pair.getKey() == msg.getClass() )
-                            pair.call( msg );
+            while (!terminated) {
+                try {
+                    Message msg = messageBus.awaitMessage(this);
+                    for (MyPair<? extends Message> pair : q) {
+                        if (pair.getKey() == msg.getClass())
+                            pair.call(msg);
                     }
 
-                } catch ( InterruptedException ie )
-                {
-                    //terminate();
+                } catch (InterruptedException ie) {
                 }
                 // System.out.println( "NOT IMPLEMENTED!!!" ); //TODO: you should delete this line :)
             }
         }
 
     }
-    }
+}

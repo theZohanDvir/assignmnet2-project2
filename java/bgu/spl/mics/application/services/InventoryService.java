@@ -31,18 +31,17 @@ public class InventoryService extends MicroService
     {
         super( "inv" + serviceNum, c );
         inventory = Inventory.getInstance();
-        System.out.println( this.getName() + " cosnturct" );
     }
 
     @Override
     protected void initialize ()
     {
-        System.out.println( this.getName() + " init" );
         subscribeEvent( CheckAvailability.class, ev -> {
             System.out.println( "check "+ev.getBookName() );
             int price = -1;
             synchronized ( inventory )
             {
+
                 price = inventory.checkAvailabiltyAndGetPrice( ev.getBookName() );
 
                 if ( ev.getCredit() >= price )
@@ -52,6 +51,7 @@ public class InventoryService extends MicroService
                 }
             }
             complete( ev, price );
+
         } );
         subscribeBroadcast( TickBroadcast.class, ev -> {
             tick = ev.getTick();

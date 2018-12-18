@@ -33,30 +33,30 @@ public class SellingService extends MicroService
     {
         super( "Sell" + serviceNum, c );
         moneyRegister = MoneyRegister.getInstance();
-        System.out.println( this.getName() + " cosnturct" );
+
     }
 
     @Override
     protected void initialize ()
     {
-        System.out.println( this.getName() + " init" );
         subscribeEvent( OrderBookEvent.class, ev -> {
             System.out.println( "order recived "+ev.getBookName()  );
             int prossTick = tick;
             System.out.println( "check" );
             Future f = sendEvent( new CheckAvailability( ev.getBookName(), ev.getCustomer().getAvailableCreditAmount() ) );
             int result = (int) f.get( ( endTick - tick ) * speed, t );
-
+            System.out.println("aftercheck "+ev.getBookName() +" "+ result);
             //create constractor Orderricipt
             if ( ev.getCustomer().getAvailableCreditAmount() >= result )
             {
+                System.out.println("AFTER IF");
                 moneyRegister.chargeCreditCard( ev.getCustomer(), result );
                 OrderReceipt r = new OrderReceipt( this.getName(), result, ev.getBookName(), tick, ev.getTick(), prossTick );
                 moneyRegister.file( r );
                 this.complete( ev, r );
-                System.out.println( this.getName() + " complete" );
+                System.out.println( this.getName() + " complete " +ev.getBookName());
             }
-
+            complete(ev,new OrderReceipt(this.getName(), result, ev.getBookName(), tick, ev.getTick(), prossTick ));
         } );
         subscribeBroadcast( TickBroadcast.class, ev -> {
             tick = ev.getTick();

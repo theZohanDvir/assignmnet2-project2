@@ -31,13 +31,11 @@ public class LogisticsService extends MicroService
     {
         super( "Logistic " + serviceNum, c );
         // TODO Implement this
-        System.out.println( this.getName() + " cosnturct" );
     }
 
     @Override
     protected void initialize ()
     {
-        System.out.println( this.getName() + " cosnturct" );
         subscribeEvent( DeliveryEvent.class, ev -> {
             System.out.println( "del Ev" );
             Future f = sendEvent( new GetVehicle() );

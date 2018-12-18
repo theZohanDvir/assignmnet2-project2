@@ -2,6 +2,7 @@ package bgu.spl.mics.application.passiveObjects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Passive data-object representing a customer of the store.
@@ -69,9 +70,14 @@ public class Customer {
 	/**
      * Retrieves this customers credit card serial number.    
      */
-	public int getCreditNumber() { return creditCard; }
+	public synchronized int getCreditNumber() { return creditCard; }
+
 	public void adReceipt(OrderReceipt R){
 		customerReceiptList.add(R);
+	}
+
+	public synchronized void amountToCharge(int amount){
+		availableAmountInCreditCard=availableAmountInCreditCard-amount;
 	}
 	
 }

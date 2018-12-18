@@ -92,7 +92,7 @@ public class Inventory
         {
             if ( currbook.getBookTitle().equals( book ) )
                 if ( currbook.getAmountInInventory() > 0 )
-                return currbook.getPrice();
+                     return currbook.getPrice();
         }
         return -1;
     }

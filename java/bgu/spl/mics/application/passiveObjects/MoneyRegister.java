@@ -63,6 +63,7 @@ public class MoneyRegister
      */
     public void chargeCreditCard ( Customer c, int amount )
     {
+        c.amountToCharge(amount);
 
 
     }
